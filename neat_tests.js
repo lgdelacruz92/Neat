@@ -52,6 +52,18 @@ const test_neat_8 = () => {
     }
 }
 
+const test_neat_9 = () => {
+    const INPUTNUMBER = 2;
+    const OUTPUTNUMBER = 1;
+    const neat = new Neat(INPUTNUMBER, OUTPUTNUMBER);
+    const connection1 = neat.connections[0];
+    assertEqual(connection1.inNode === neat.nodes[0], true, 'Make sure the nodes are connected by connection.');
+    assertEqualNoTitle(connection1.outNode === neat.nodes[2], true);
+    const connection2 = neat.connections[1];
+    assertEqualNoTitle(connection2.inNode === neat.nodes[1], true);
+    assertEqualNoTitle(connection2.outNode === neat.nodes[2], true);
+}
+
 test_neat_1();
 test_neat_2();
 test_neat_3();
@@ -60,3 +72,4 @@ test_neat_5();
 test_neat_6();
 test_neat_7();
 test_neat_8();
+test_neat_9();

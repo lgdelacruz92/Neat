@@ -13,6 +13,11 @@ const assertEqual = (a, b, title) => {
     consoleSuccess(`Success. ${a} === ${b}`);
 }
 
+const assertEqualNoTitle = (a, b) => {
+    if (a !== b) throw Error(`\tFailed: ${a} does not equal ${b}`);
+    consoleSuccess(`Success. ${a} === ${b}`);
+}
+
 const assertThrows = (action, message, title) => {
     printTitle(title);
     try {
