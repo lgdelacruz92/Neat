@@ -74,6 +74,27 @@ const test_neat_10 = () => {
     assertEqual(result[0], 2.25, 'Neat activate should return proper values.');
 }
 
+const test_neat_11 = () => {
+    const INPUTNUMBER = 3;
+    const OUTPUTNUMBER = 2;
+    const neat = new Neat(INPUTNUMBER, OUTPUTNUMBER);
+    assertEqual(neat.connections.length, INPUTNUMBER * OUTPUTNUMBER, 'The number of connections should scale when inputNode number and outputNode number increase.');
+}
+
+const test_neat_12 = () => {
+    const INPUTNUMBER = 3;
+    const OUTPUTNUMBER = 2;
+    const neat = new Neat(INPUTNUMBER, OUTPUTNUMBER);
+    for (let i = 0; i < neat.connections.length; i++) {
+        neat.connections[i].weight = 0.5;
+    }
+    const result = neat.activate([1, 1, 1]);
+    assertEqual(result.length, 2, 'The output on a Neat activate should be valid.');
+    for (let i = 0; i < result.length; i++) {
+        assertEqualNoTitle(result[i], 1.5);
+    }
+}
+
 test_neat_1();
 test_neat_2();
 test_neat_3();
@@ -84,3 +105,5 @@ test_neat_7();
 test_neat_8();
 test_neat_9();
 test_neat_10();
+test_neat_11();
+test_neat_12();
