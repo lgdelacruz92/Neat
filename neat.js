@@ -13,6 +13,9 @@ class Neat {
         this._initConnections();
     }
 
+    /**
+     * Initializes the connections of Neat
+     */
     _initConnections() {
         this.connections = [];
 
@@ -28,6 +31,9 @@ class Neat {
         }
     }
 
+    /**
+     * Initializes the nodes of Neat
+     */
     _initNodes() {
         this.nodes = [];
         const totalNodes = this.inputNumber + this.outputNumber;
@@ -36,14 +42,37 @@ class Neat {
         }
     }
 
+    /**
+     * Mutates the network
+     *    - If no option is passed then it randomly selects a mutation method.
+     * @param {bool} addNode Optional parameter to choose to mutate using addNode
+     * @param {bool} addConnection Optional parameter to choose to mutate by adding a connection
+     */
     mutate(addNode, addConnection) {
         if (addNode) {
-            _mutateAddNode();
+            this._mutateAddNode();
         }
     }
 
+    /**
+     * Mutate the network by randomly adding a node in a connection
+     */
     _mutateAddNode() {
-        
+        const randomNum = parseInt(random(0, this.connections.length));
+        const connection = this.connections[randomNum];
+        const inNode = connection.inNode;
+        const outNode = connection.outNode;
+        const newNode = new Node(uuid());
+        const newConnection1 = new Connection(uuid());
+        const newConnection2 = new Connection(uuid());
+        newConnection1.inNode = inNode;
+        newConnection1.outNode = newNode;
+        newConnection2.inNode = newNode;
+        newConnection2.outNode = outNode;
+        this.nodes.push(newNode);
+        this.connections.splice(randomNum, 1);
+        this.connections.push(newConnection1);
+        this.connections.push(newConnection2);
     }
 
     activate(inputs) {

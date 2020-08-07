@@ -95,6 +95,15 @@ const test_neat_12 = () => {
     }
 }
 
+const test_neat_13 = () => {
+    const INPUTNUMBER = 2;
+    const OUTPUTNUMBER = 1;
+    const neat = new Neat(INPUTNUMBER, OUTPUTNUMBER);
+    neat.mutate(true);
+    assertEqual(neat.nodes.length, 4, 'Mutate addNode should add an extra node.');
+    assertEqualNoTitle(neat.connections.length, 3);
+}
+
 test_neat_1();
 test_neat_2();
 test_neat_3();
@@ -107,3 +116,4 @@ test_neat_9();
 test_neat_10();
 test_neat_11();
 test_neat_12();
+test_neat_13();
