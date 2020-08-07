@@ -36,7 +36,20 @@ class Neat {
         }
     }
 
-    activate() {
-        return [2];
+    activate(inputs) {
+        if (!Array.isArray(inputs)) throw Error('Invalid type: inputs must be an array.');
+        if (inputs.length !== this.inputNumber) throw Error(`Invalid number of inputs: this network requires ${this.inputNumber} inputs.`);
+
+        for (let i = 0; i < this.inputNumber; i++) {
+            this.nodes[i].value = inputs[i];
+        }
+        for (let i = 0; i < this.connections.length; i++) {
+            this.connections[i].activate();
+        }
+        const result = [];
+        for (let i = this.inputNumber; i < this.inputNumber + this.outputNumber; i++) {
+            result.push(this.nodes[i].value);
+        }
+        return result;
     }
 }

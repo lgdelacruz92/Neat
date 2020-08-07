@@ -8,13 +8,13 @@ const test_neat_2 = () => {
 
 const test_neat_3 = () => {
     const neat = new Neat(2, 1);
-    const result = neat.activate();
+    const result = neat.activate([0, 0]);
     assertEqual(Array.isArray(result), true, 'Neat activate function returns an array.');
 }
 
 const test_neat_4 = () => {
     const neat = new Neat(2, 1);
-    const result = neat.activate();
+    const result = neat.activate([0, 0]);
     assertEqual(result.length, 1, 'Neat activate function returns the correct number of outputs.');
 }
 
@@ -64,6 +64,16 @@ const test_neat_9 = () => {
     assertEqualNoTitle(connection2.outNode === neat.nodes[2], true);
 }
 
+const test_neat_10 = () => {
+    const INPUTNUMBER = 2;
+    const OUTPUTNUMBER = 1;
+    const neat = new Neat(INPUTNUMBER, OUTPUTNUMBER);
+    neat.connections[0].weight = 1.5;
+    neat.connections[1].weight = 1.5;
+    const result = neat.activate([1, 0.5]);
+    assertEqual(result[0], 2.25, 'Neat activate should return proper values.');
+}
+
 test_neat_1();
 test_neat_2();
 test_neat_3();
@@ -73,3 +83,4 @@ test_neat_6();
 test_neat_7();
 test_neat_8();
 test_neat_9();
+test_neat_10();
