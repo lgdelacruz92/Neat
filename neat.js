@@ -5,4 +5,8 @@ class Neat {
         this.inputNumber = inputNumber;
         this.outputNumber = outputNumber;
     }
+
+    activate() {
+        return [2];
+    }
 }
