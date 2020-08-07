@@ -20,7 +20,7 @@ class Neat {
             for (let j = this.inputNumber; j < this.inputNumber + this.outputNumber; j++) {
                 const outNode = this.nodes[j];
                 const inNode = this.nodes[i-1];
-                const newConnection = new Connection(i, random(-2, 2), true);
+                const newConnection = new Connection(uuid(), random(-2, 2), true);
                 newConnection.inNode = inNode;
                 newConnection.outNode = outNode;
                 this.connections.push(newConnection);     
@@ -32,8 +32,18 @@ class Neat {
         this.nodes = [];
         const totalNodes = this.inputNumber + this.outputNumber;
         for (let i = 1; i <= totalNodes; i++) {
-            this.nodes.push(new Node(i));
+            this.nodes.push(new Node(uuid()));
         }
+    }
+
+    mutate(addNode, addConnection) {
+        if (addNode) {
+            _mutateAddNode();
+        }
+    }
+
+    _mutateAddNode() {
+        
     }
 
     activate(inputs) {
