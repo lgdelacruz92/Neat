@@ -19,10 +19,10 @@ class Neat {
     _initConnections() {
         this.connections = [];
 
-        for (let i = 1; i <= this.inputNumber; i++) {
+        for (let i = 0; i < this.inputNumber; i++) {
             for (let j = this.inputNumber; j < this.inputNumber + this.outputNumber; j++) {
                 const outNode = this.nodes[j];
-                const inNode = this.nodes[i-1];
+                const inNode = this.nodes[i];
                 const newConnection = new Connection(uuid(), random(-2, 2), true);
                 newConnection.inNode = inNode;
                 newConnection.outNode = outNode;
