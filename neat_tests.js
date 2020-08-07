@@ -25,8 +25,38 @@ const test_neat_5 = () => {
     assertEqual(neat.nodes.length, INPUTNUMBER + OUTPUTNUMBER, 'Neat must initialize the number of nodes.');
 }
 
+const test_neat_6 = () => {
+    const INPUTNUMBER = 2;
+    const OUTPUTNUMBER = 1;
+    const neat = new Neat(INPUTNUMBER, OUTPUTNUMBER);
+    assertEqual(neat.connections.length, 2,'Neat must initialize connections.');
+}
+
+const test_neat_7 = () => {
+    const INPUTNUMBER = 2;
+    const OUTPUTNUMBER = 1;
+    const neat = new Neat(INPUTNUMBER, OUTPUTNUMBER);
+    for (let i = 0; i < neat.connections.length; i++) {
+        const connection = neat.connections[i];
+        assertEqual(-2 <= connection.weight && connection.weight < 2, true, 'Make sure the weights of the connections in Neat are initialized.');
+    }
+}
+
+const test_neat_8 = () => {
+    const INPUTNUMBER = 2;
+    const OUTPUTNUMBER = 1;
+    const neat = new Neat(INPUTNUMBER, OUTPUTNUMBER);
+    for (let i = 0; i < neat.nodes.length; i++) {
+        const node = neat.nodes[i];
+        assertEqual(node.id, i + 1, 'Ensure the nodes in Neat are initialized.');
+    }
+}
+
 test_neat_1();
 test_neat_2();
 test_neat_3();
 test_neat_4();
 test_neat_5();
+test_neat_6();
+test_neat_7();
+test_neat_8();
