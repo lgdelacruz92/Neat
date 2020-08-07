@@ -8,6 +8,6 @@ class Node {
         this.id = identificationNumber;
 
         // Value
-        this.value = null;
+        this.value = 0;
     }
 }

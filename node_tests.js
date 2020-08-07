@@ -19,4 +19,23 @@ const test_node_1 = () => {
     assertThrows(() => { new Node() }, 'Value required: identificationNumber.')
 }
 
+const test_node_2 = () => {
+    assertThrows(() => { new Connection() }, 'Value required: innovationNumber.');
+}
+
+const test_node_3 = () => {
+    const connection = new Connection(1);
+    assertThrows(() => { connection.activate() }, 'Value not defined: this.inNode.');
+}
+
+const test_node_4 = () => {
+    const node = new Node(1);
+    const connection = new Connection(1);
+    connection.inNode = node;
+    assertThrows(() => { connection.activate() }, 'Value not defined: this.outNode.');
+}
+
 test_node_1();
+test_node_2();
+test_node_3();
+test_node_4();

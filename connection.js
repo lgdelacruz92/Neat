@@ -3,7 +3,7 @@
  */
 class Connection {
     constructor(innovationNumber, weight, expressed) {
-        if (!innovationNumber) throw Error('Value is required: innovationNumber.');
+        if (!innovationNumber) throw Error('Value required: innovationNumber.');
 
         // Innovation number of the connection
         this.in = innovationNumber;
@@ -22,8 +22,8 @@ class Connection {
     }
 
     activate() {
-        if (!this.inNode) throw Error('In node is not defined.');
-        if (!this.outNode) throw Error('Out node is not defined.');
+        if (!this.inNode) throw Error(`Value not defined: this.inNode.`);
+        if (!this.outNode) throw Error('Value not defined: this.outNode.');
 
         if (this.expressed) {
             this.outNode = this.inNode.value * this.weight;
