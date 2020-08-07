@@ -26,7 +26,7 @@ class Connection {
         if (!this.outNode) throw Error('Value not defined: this.outNode.');
 
         if (this.expressed) {
-            this.outNode = this.inNode.value * this.weight;
+            this.outNode.value = this.inNode.value * this.weight;
         }
     }
 
