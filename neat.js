@@ -4,6 +4,16 @@ class Neat {
         if (!outputNumber) throw Error('Value required: outputNumber.');
         this.inputNumber = inputNumber;
         this.outputNumber = outputNumber;
+
+        this._initNodes();
+    }
+
+    _initNodes() {
+        this.nodes = [];
+        const totalNodes = this.inputNumber + this.outputNumber;
+        for (let i = 1; i <= totalNodes; i++) {
+            this.nodes.push(new Node(i));
+        }
     }
 
     activate() {
