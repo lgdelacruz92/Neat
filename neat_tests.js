@@ -104,6 +104,22 @@ const test_neat_13 = () => {
     assertEqualNoTitle(neat.connections.length, 3);
 }
 
+const test_neat_14 = () => {
+    const INPUTNUMBER = 2;
+    const OUTPUTNUMBER = 1;
+    const neat = new Neat(INPUTNUMBER, OUTPUTNUMBER);
+    neat.connections[0].weight = 0.5;
+    neat.connections[1].weight = 0.5;
+    let result = neat.activate([1, 1]);
+    assertEqual(result[0], 1, 'Activate should be valid even when mutated');
+    neat.mutate(true);
+    neat.connections[0].weight = 0.5;
+    neat.connections[1].weight = 0.5;
+    neat.connections[2].weight = 0.5;
+    result = neat.activate([1, 1]);
+    assertEqualNoTitle(result[0], 0.75);
+}
+
 test_neat_1();
 test_neat_2();
 test_neat_3();
@@ -117,3 +133,4 @@ test_neat_10();
 test_neat_11();
 test_neat_12();
 test_neat_13();
+test_neat_14();

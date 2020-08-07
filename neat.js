@@ -63,8 +63,8 @@ class Neat {
         const inNode = connection.inNode;
         const outNode = connection.outNode;
         const newNode = new Node(uuid());
-        const newConnection1 = new Connection(uuid());
-        const newConnection2 = new Connection(uuid());
+        const newConnection1 = new Connection(uuid(), 0, true);
+        const newConnection2 = new Connection(uuid(), 0, true);
         newConnection1.inNode = inNode;
         newConnection1.outNode = newNode;
         newConnection2.inNode = newNode;
@@ -76,6 +76,7 @@ class Neat {
     }
 
     activate(inputs) {
+        this.nodes.map(n => { n.value = 0; });
         if (!Array.isArray(inputs)) throw Error('Invalid type: inputs must be an array.');
         if (inputs.length !== this.inputNumber) throw Error(`Invalid number of inputs: this network requires ${this.inputNumber} inputs.`);
 
