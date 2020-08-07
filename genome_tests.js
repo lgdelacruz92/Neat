@@ -19,7 +19,7 @@ const assertThrows = (action, message, title) => {
         action();
     } catch (e) {
         if (e.message !== message) {
-            console.log(`\tThe action should throw: ${message}`);
+            console.log(`%c\tThe action should throw: ${message}`, 'background: #222; color: red');
         } else {
             consoleSuccess(`Success. Exception caught: ${e.message}`)
         }
