@@ -129,9 +129,18 @@ const test_neat_15 = () => {
         neat.connections[i].weight = 0.5;
     }
     let result = neat.activate([1, 1, 1]);
-    assertEqual(result.length, 2, 'Complex network should be accurate.');
+    assertEqual(result.length, 2, 'Complex network should be accurate 1.');
     assertEqualNoTitle(result[0] === 1.5 || result[0] === 1.25, true);
-    assertEqualNoTitle(result[1] === 1.5 || result[0] === 1.25, true);
+    assertEqualNoTitle(result[1] === 1.5 || result[1] === 1.25, true);
+}
+
+const test_neat_16 = () => {
+    const INPUTNUMBER = 3;
+    const OUTPUTNUMBER = 1;
+    const neat = new Neat(INPUTNUMBER, OUTPUTNUMBER);
+    neat.mutate(false, true);
+    assertEqual(neat.nodes.length, 4, 'Complex network should be accurate 2.');
+    assertEqualNoTitle(neat.connections.length, 4);
 }
 
 test_neat_1();
@@ -149,3 +158,4 @@ test_neat_12();
 test_neat_13();
 test_neat_14();
 test_neat_15();
+test_neat_16();

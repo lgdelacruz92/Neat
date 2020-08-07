@@ -8,7 +8,8 @@ class Neat {
         if (!outputNumber) throw Error('Value required: outputNumber.');
         this.inputNumber = inputNumber;
         this.outputNumber = outputNumber;
-
+        
+        this.inputNodeIds = {};
         this._initNodes();
         this._initConnections();
     }
@@ -36,8 +37,14 @@ class Neat {
      */
     _initNodes() {
         this.nodes = [];
+        for (let i = 0; i < this.inputNumber; i++) {
+            const newId = uuid();
+            this.inputNodeIds[newId] = true;
+            this.nodes.push(new Node(newId));
+        }
+        
         const totalNodes = this.inputNumber + this.outputNumber;
-        for (let i = 1; i <= totalNodes; i++) {
+        for (let i = this.inputNumber; i < totalNodes; i++) {
             this.nodes.push(new Node(uuid()));
         }
     }
@@ -51,7 +58,27 @@ class Neat {
     mutate(addNode, addConnection) {
         if (addNode) {
             this._mutateAddNode();
+        } else if (addConnection) {
+            this._mutateAddConnection();
         }
+    }
+
+    /**
+     * Mutate the network by adding a random connection.
+     */
+    _mutateAddConnection() {
+        let node1 = this.nodes[parseInt(random(0, this.nodes.length))];
+        let node2 = this.nodes[parseInt(random(0, this.nodes.length))];
+
+        while ((this.inputNodeIds[node1.id] && this.inputNodeIds[node2.id]) || node1.id === node2.id) {
+            node1 = this.nodes[parseInt(random(0, this.nodes.length))];
+            node2 = this.nodes[parseInt(random(0, this.nodes.length))];
+        }
+
+        const newConnection = new Connection(uuid(), random(-2, 2), true);
+        newConnection.inNode = node1;
+        newConnection.outNode = node2;
+        this.connections.push(newConnection);
     }
 
     /**
