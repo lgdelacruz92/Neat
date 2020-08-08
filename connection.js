@@ -34,7 +34,10 @@ class Connection {
      * Returns a copy of itself
      */
     copy() {
-        return new Connection(this.in, this.weight, this.expressed);
+        const newConnection = new Connection(this.in, this.weight, this.expressed);
+        newConnection.inNode = this.inNode.copy();
+        newConnection.outNode = this.outNode.copy();
+        return newConnection;
     }
 
 }

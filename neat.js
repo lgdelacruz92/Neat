@@ -24,8 +24,27 @@ class Neat {
         newNeat.inputNodeIds = JSON.parse(JSON.stringify(this.inputNodeIds));
         newNeat.outputNodeIds = JSON.parse(JSON.stringify(this.outputNodeIds));
         newNeat.connections = this.connections.map(cnn => cnn.copy());
-        newNeat.nodes = this.nodes.map(n => n.copy());
+        this._fillNodesFromConnections(newNeat);
         return newNeat;
+    }
+
+    /**
+     * Fills it's nodes with the proper nodes
+     * @param {Neat} newNeat The new Neat copy
+     */
+    _fillNodesFromConnections(newNeat) {
+        newNeat.nodes = [];
+        const alreadyExists = {};
+        newNeat.connections.forEach(cnn => {
+            if (!alreadyExists[cnn.inNode.id]) {
+                newNeat.nodes.push(cnn.inNode);
+                alreadyExists[cnn.inNode.id] = true;
+            }
+            if (!alreadyExists[cnn.outNode.id]) {
+                newNeat.nodes.push(cnn.outNode);
+                alreadyExists[cnn.outNode.id] = true;
+            }
+        });
     }
 
     /**
@@ -167,12 +186,63 @@ class Neat {
      * @return {Neat} New child neat from the crossover
      */
     crossOver(otherNeat) {
-        const nodePairs = {};
-        this.connections.forEach(cnn => { this._fillNodePairs(cnn, nodePairs) });
-        otherNeat.connections.forEach(cnn => { this._fillNodePairs(cnn, nodePairs)});
-        const innovationNumbers = Object.keys(nodePairs);
+
+        const connectionPairs = this._getConnectionPairs(otherNeat);
+        const parentNodes = this._getParentNodes(otherNeat);
+        const innovationNumbers = Object.keys(connectionPairs);
+        
+        // Make new child
         const newNeatChild = new Neat(this.inputNumber, this.outputNumber);
-        newNeatChild.connections = [];
+        newNeatChild.connections = []; //
+        this._produceChildConnections(newNeatChild, innovationNumbers, connectionPairs);
+        
+        return newNeatChild;
+    }
+
+    /**
+     * Builds a new child nodes for the child
+     * @param {Neat} newNeatChild The Neat child
+     */
+    _buildChildNodes(newNeatChild, nodes) {
+        const connections = newNeatChild.connections;
+    }
+
+    /**
+     * Gets the nodes of this and otherNeat
+     * @param {Neat} otherNeat The Neat crossing over with
+     */
+    _getParentNodes(otherNeat) {
+        const alreadyExists = {};
+        const nodes = [];
+        this.nodes.forEach(n => {
+            if (!alreadyExists[n.id]) nodes.push(n.copy());
+        });
+        otherNeat.nodes.forEach(n => {
+            if (!alreadyExists[n.id]) nodes.push(n.copy());
+        });
+        return nodes;
+    }
+
+    /**
+     * Gets the connection pairs between this and other neat
+     * @param {Neat} otherNeat The neat crossing over with
+     */
+    _getConnectionPairs(otherNeat) {
+        const connectionPairs = {};
+        this.connections.forEach(cnn => { this._fillNodePairs(cnn, connectionPairs) });
+        otherNeat.connections.forEach(cnn => { this._fillNodePairs(cnn, connectionPairs)});
+        return connectionPairs;
+    }
+
+    /**
+     * Produces the connections of the child.
+     * The connections are deep copy connections
+     * @param {Neat} newNeatChild The Neat child
+     * @param {Array} innovationNumbers Array of innovation numbers representing all the connections found
+     * @param {Object} nodePairs Pairs of connections based on innovation numbers.
+     * @return void
+     */
+    _produceChildConnections(newNeatChild, innovationNumbers, nodePairs) {
         innovationNumbers.forEach(innoNumber => {
             const connectionPair = nodePairs[innoNumber];
             if (connectionPair.length === 1) {
@@ -184,7 +254,6 @@ class Neat {
                 throw Error(`This should never happen. Something went wrong. function: crossOver ${connectionPair}`);
             }
         });
-        return newNeatChild;
     }
 
     /**
