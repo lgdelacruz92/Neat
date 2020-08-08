@@ -143,6 +143,26 @@ const test_neat_16 = () => {
     assertEqualNoTitle(neat.connections.length, 4);
 }
 
+const test_neat_17 = () => {
+    const INPUTNUMBER = 2;
+    const OUTPUTNUMBER = 1;
+    const neat = new Neat(INPUTNUMBER, OUTPUTNUMBER);
+    for (let i = 0; i < 10; i++){
+        neat.mutate(true)
+    }
+    assertEqual(neat.nodes.length, INPUTNUMBER + OUTPUTNUMBER + 10, 'Extreme add node mutation.');
+}
+
+const test_neat_18 = () => {
+    const INPUTNUMBER = 2;
+    const OUTPUTNUMBER = 1;
+    const neat = new Neat(INPUTNUMBER, OUTPUTNUMBER);
+    for (let i = 0; i < 10; i++) {
+        neat.mutate(false, true);
+    }
+    assertEqual(neat.connections.length, INPUTNUMBER + OUTPUTNUMBER + 10 - 1, 'Extream add connection mutation.');
+}
+
 test_neat_1();
 test_neat_2();
 test_neat_3();
@@ -159,3 +179,5 @@ test_neat_13();
 test_neat_14();
 test_neat_15();
 test_neat_16();
+test_neat_17();
+test_neat_18();
