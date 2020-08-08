@@ -9,7 +9,8 @@ const OFF_COLOR = '#a84632';
  */
 function pnprint(neat, width, height) {
     return {
-        inputLayer: _getInputLayerLocations(neat, width, height)
+        inputLayer: _getInputLayerLocations(neat, width, height),
+        outputLayer: _getOutputLayerLocations(neat, width, height)
     }
 }
 
@@ -31,8 +32,30 @@ function _getInputLayerLocations(neat, width, height) {
     const increments = 1 / (inputNumber + 1);
     const result = [];
     for (let i = 1; i <= inputNumber; i++) {
-        result.push({ x: 100, y: i * (height * increments), onColor: ON_COLOR, offColor: OFF_COLOR });
+        result.push({ x: width / 8, y: i * (height * increments), onColor: ON_COLOR, offColor: OFF_COLOR });
     }
     return result;
 }
 
+/**
+ * This gets the output layer locations
+ * @param {Neat} neat Neat network to get layer locations
+ * @param {number} width Width of the canvas
+ * @param {number} height Height of the canvas
+ * @return {Object} Example
+ *                    {
+ *                       x: number,
+ *                       y: number,
+ *                       onColor: #32a852,
+ *                       offColor: #a84632
+ *                    }
+ */
+function _getOutputLayerLocations(neat, width, height) {
+    const outputNumber = neat.outputNumber;
+    const increments = 1 / (outputNumber + 1);
+    const result = [];
+    for (let i = 1; i <= outputNumber; i++) {
+        result.push({ x: width * (7/8), y: i * (height * increments), onColor: ON_COLOR, offColor: OFF_COLOR });
+    }
+    return result;
+}
