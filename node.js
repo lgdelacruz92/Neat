@@ -10,4 +10,11 @@ class Node {
         // Value
         this.value = 0;
     }
+
+    /**
+     * Returns a copy of itself
+     */
+    copy() {
+        return new Node(this.id);
+    }
 }

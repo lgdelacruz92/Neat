@@ -30,4 +30,11 @@ class Connection {
         }
     }
 
+    /**
+     * Returns a copy of itself
+     */
+    copy() {
+        return new Connection(this.in, this.weight, this.expressed);
+    }
+
 }

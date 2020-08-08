@@ -163,6 +163,39 @@ const test_neat_18 = () => {
     assertEqual(neat.connections.length, INPUTNUMBER + OUTPUTNUMBER + 10 - 1, 'Extream add connection mutation.');
 }
 
+const test_neat_19 = () => {
+    const INPUTNUMBER = 2;
+    const OUTPUTNUMBER = 1;
+    const neat1 = new Neat(INPUTNUMBER, OUTPUTNUMBER);
+    const neat2 = neat1.copy();
+
+    assertEqual(neat1.connections.length, neat2.connections.length, 'Neat copy must by a deep copy.');
+    assertEqualNoTitle(neat1.nodes.length, neat2.nodes.length);
+    for (let i = 0; i < neat1.connections.length; i++) {
+        assertEqualNoTitle(neat1.connections[i].weight === neat2.connections[i].weight, true);
+    }
+    for (let i = 0; i < neat2.nodes.length; i++) {
+        assertEqualNoTitle(neat1.nodes[i].value === neat2.nodes[i].value, true);
+    }
+}
+
+const test_neat_20 = () => {
+    const INPUTNUMBER = 2;
+    const OUTPUTNUMBER = 1;
+    const neat1 = new Neat(INPUTNUMBER, OUTPUTNUMBER);
+    const neat2 = neat1.copy();
+
+    const childNeat = neat1.crossOver(neat2);
+    assertEqual(neat1.connections.length, childNeat.connections.length, 'Neat must have the ability to crossover.');
+    assertEqualNoTitle(neat1.nodes.length, childNeat.nodes.length);
+    for (let i = 0; i < neat1.connections.length; i++) {
+        assertEqualNoTitle(neat1.connections[i].weight === childNeat.connections[i].weight, true);
+    }
+    for (let i = 0; i < childNeat.nodes.length; i++) {
+        assertEqualNoTitle(neat1.nodes[i].value === childNeat.nodes[i].value, true);
+    }
+}
+
 test_neat_1();
 test_neat_2();
 test_neat_3();
@@ -181,3 +214,5 @@ test_neat_15();
 test_neat_16();
 test_neat_17();
 test_neat_18();
+test_neat_19();
+test_neat_20(); 

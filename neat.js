@@ -16,6 +16,19 @@ class Neat {
     }
 
     /**
+     * Returns a copy of itself
+     * @return {Neat} new Neat copy
+     */ 
+    copy() {
+        const newNeat = new Neat(this.inputNumber, this.outputNumber);
+        newNeat.inputNodeIds = JSON.parse(JSON.stringify(this.inputNodeIds));
+        newNeat.outputNodeIds = JSON.parse(JSON.stringify(this.outputNodeIds));
+        newNeat.connections = this.connections.map(cnn => cnn.copy());
+        newNeat.nodes = this.nodes.map(n => n.copy());
+        return newNeat;
+    }
+
+    /**
      * Initializes the connections of Neat
      */
     _initConnections() {
@@ -145,5 +158,45 @@ class Neat {
             result.push(this.nodes[i].value);
         }
         return result;
+    }
+
+    /**
+     * Function that crossovers this neat with another neat
+     * @param {Neat} otherNeat The neat network to crossover with
+     * @param {boolean} deleteExcess Option to delete excess or not
+     * @return {Neat} New child neat from the crossover
+     */
+    crossOver(otherNeat) {
+        const nodePairs = {};
+        this.connections.forEach(cnn => { this._fillNodePairs(cnn, nodePairs) });
+        otherNeat.connections.forEach(cnn => { this._fillNodePairs(cnn, nodePairs)});
+        const innovationNumbers = Object.keys(nodePairs);
+        const newNeatChild = new Neat(this.inputNumber, this.outputNumber);
+        newNeatChild.connections = [];
+        innovationNumbers.forEach(innoNumber => {
+            const connectionPair = nodePairs[innoNumber];
+            if (connectionPair.length === 1) {
+                newNeatChild.connections.push(connectionPair[0].copy());
+            } else if (connectionPair.length === 2) {
+                const randNum = Math.random();
+                newNeatChild.connections.push(connectionPair[randNum > 0.5 ? 1 : 0].copy());
+            } else {
+                throw Error(`This should never happen. Something went wrong. function: crossOver ${connectionPair}`);
+            }
+        });
+        return newNeatChild;
+    }
+
+    /**
+     * Fills the node pairs map
+     * @param {Connection} cnn The Connection to append
+     * @param {Object} nodePairs Mapping of the node pairs
+     */
+    _fillNodePairs(cnn, nodePairs) {
+        if (nodePairs[cnn.in]) {
+            nodePairs[cnn.in].push(cnn);
+        } else {
+            nodePairs[cnn.in] = [cnn];
+        }
     }
 }
