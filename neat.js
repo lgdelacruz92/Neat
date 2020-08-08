@@ -10,6 +10,7 @@ class Neat {
         this.outputNumber = outputNumber;
         
         this.inputNodeIds = {};
+        this.outputNodeIds = {};
         this._initNodes();
         this._initConnections();
     }
@@ -45,7 +46,9 @@ class Neat {
 
         const totalNodes = this.inputNumber + this.outputNumber;
         for (let i = this.inputNumber; i < totalNodes; i++) {
-            this.nodes.push(new Node(uuid()));
+            const newId = uuid();
+            this.outputNodeIds[newId] = true;
+            this.nodes.push(new Node(newId));
         }
     }
 
@@ -67,18 +70,38 @@ class Neat {
      * Mutate the network by adding a random connection.
      */
     _mutateAddConnection() {
-        let node1 = this.nodes[parseInt(random(0, this.nodes.length))];
-        let node2 = this.nodes[parseInt(random(0, this.nodes.length))];
+        let index1 = parseInt(random(0, this.nodes.length));
+        let index2 = parseInt(random(0, this.nodes.length));
+        let node1 = this.nodes[Math.min(index1, index2)];
+        let node2 = this.nodes[Math.max(index1, index2)];
 
-        while ((this.inputNodeIds[node1.id] && this.inputNodeIds[node2.id]) || node1.id === node2.id) {
-            node1 = this.nodes[parseInt(random(0, this.nodes.length))];
-            node2 = this.nodes[parseInt(random(0, this.nodes.length))];
+        while ((this.inputNodeIds[node1.id] && this.inputNodeIds[node2.id]) 
+            || node1.id === node2.id
+            || (this.outputNodeIds[node1.id] && this.outputNodeIds[node2.id])
+            ) {
+            index1 = parseInt(random(0, this.nodes.length));
+            index2 = parseInt(random(0, this.nodes.length));
+            node1 = this.nodes[Math.min(index1, index2)];
+            node2 = this.nodes[Math.max(index1, index2)];
         }
 
         const newConnection = new Connection(uuid(), random(-2, 2), true);
-        newConnection.inNode = node1;
-        newConnection.outNode = node2;
+        if (this._isHiddenLayerNode(node2) && this.outputNodeIds[node1.id]) {
+            newConnection.inNode = node2;
+            newConnection.outNode = node1;
+        } else {
+            newConnection.inNode = node1;
+            newConnection.outNode = node2;
+        }
         this.connections.push(newConnection);
+    }
+
+    /**
+     * Node is hidden layer node
+     * @param {Node} node The node to check
+     */
+    _isHiddenLayerNode(node) {
+        return !this.inputNodeIds[node.id] && !this.outputNodeIds[node.id];
     }
 
     /**

@@ -8,14 +8,8 @@ const WIDTH = 600;
 function setup() {
     createCanvas(WIDTH, HEIGHT);
     neat = new Neat(4, 3);
-    neat.mutate(true);
-    neat.mutate(true);
-    neat.mutate(true);
-    neat.mutate(true);
-    neat.mutate(true);
-    neat.mutate(true);
-    neat.mutate(true);
     pp = pnprint(neat, WIDTH, HEIGHT);
+    count = 0;
 }
 
 function draw() {
