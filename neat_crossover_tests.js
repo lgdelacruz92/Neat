@@ -75,6 +75,11 @@ const test_neat_22 = () => {
             }
         }
     }
+    const childNeat = neat1.crossOver(neat2);
+
+    for (let i = 0; i < childNeat.nodes.length; i++) {
+        assertEqualNoTitle(childNeat.nodes[i].id, `${i}`);
+    }
 }
 
 test_neat_21(); 
