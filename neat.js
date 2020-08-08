@@ -11,6 +11,8 @@ class Neat {
         
         this.inputNodeIds = {};
         this.outputNodeIds = {};
+        this.nodeCurrentNumber = 0;
+        this.connectionCurrentNumber = 0;
         this._initNodes();
         this._initConnections();
     }
@@ -57,10 +59,12 @@ class Neat {
             for (let j = this.inputNumber; j < this.inputNumber + this.outputNumber; j++) {
                 const outNode = this.nodes[j];
                 const inNode = this.nodes[i];
-                const newConnection = new Connection(uuid(), random(-2, 2), true);
+                const innovationNumber = this.connectionCurrentNumber;
+                const newConnection = new Connection(innovationNumber, random(-2, 2), true);
                 newConnection.inNode = inNode;
                 newConnection.outNode = outNode;
-                this.connections.push(newConnection);     
+                this.connections.push(newConnection);
+                this.connectionCurrentNumber += 1;
             }
         }
     }
@@ -71,16 +75,18 @@ class Neat {
     _initNodes() {
         this.nodes = [];
         for (let i = 0; i < this.inputNumber; i++) {
-            const newId = uuid();
+            const newId = this.nodeCurrentNumber;
             this.inputNodeIds[newId] = true;
             this.nodes.push(new Node(newId));
+            this.nodeCurrentNumber += 1;
         }
 
         const totalNodes = this.inputNumber + this.outputNumber;
         for (let i = this.inputNumber; i < totalNodes; i++) {
-            const newId = uuid();
+            const newId = this.nodeCurrentNumber;
             this.outputNodeIds[newId] = true;
             this.nodes.push(new Node(newId));
+            this.nodeCurrentNumber += 1;
         }
     }
 

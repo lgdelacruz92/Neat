@@ -3,7 +3,7 @@
  */
 class Node {
     constructor(identificationNumber) {
-        if (!identificationNumber) throw Error('Value required: identificationNumber.');
+        if (identificationNumber === undefined) throw Error('Value required: identificationNumber.');
         // The identification number of of the node
         this.id = identificationNumber;
 

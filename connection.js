@@ -3,7 +3,7 @@
  */
 class Connection {
     constructor(innovationNumber, weight, expressed) {
-        if (!innovationNumber) throw Error('Value required: innovationNumber.');
+        if (innovationNumber === undefined) throw Error('Value required: innovationNumber.');
 
         // Innovation number of the connection
         this.in = innovationNumber;
