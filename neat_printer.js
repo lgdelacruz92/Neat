@@ -8,10 +8,10 @@ const OFF_COLOR = '#a84632';
  * @param {number} height Height of canvas 
  */
 function pnprint(neat, width, height) {
-    return {
-        inputLayer: _getInputLayerLocations(neat, width, height),
-        outputLayer: _getOutputLayerLocations(neat, width, height)
-    }
+    const inputLayer = _getInputLayerLocations(neat, width, height);
+    const outputLayer = _getOutputLayerLocations(neat, width, height);
+    const connections = _getConnectionLines(neat, inputLayer, outputLayer);
+    return {inputLayer, outputLayer, connections};
 }
 
 /**
@@ -24,7 +24,8 @@ function pnprint(neat, width, height) {
  *                        x: number,
  *                        y: number,
  *                        onColor: #32a852,
- *                        offColor: #a84632
+ *                        offColor: #a84632,
+ *                        id: string
  *                    }
  */
 function _getInputLayerLocations(neat, width, height) {
@@ -32,7 +33,8 @@ function _getInputLayerLocations(neat, width, height) {
     const increments = 1 / (inputNumber + 1);
     const result = [];
     for (let i = 1; i <= inputNumber; i++) {
-        result.push({ x: width / 8, y: i * (height * increments), onColor: ON_COLOR, offColor: OFF_COLOR });
+        const nodeId = neat.nodes[i-1].id;
+        result.push({ x: width / 8, y: i * (height * increments), onColor: ON_COLOR, offColor: OFF_COLOR, id: nodeId });
     }
     return result;
 }
@@ -47,7 +49,8 @@ function _getInputLayerLocations(neat, width, height) {
  *                       x: number,
  *                       y: number,
  *                       onColor: #32a852,
- *                       offColor: #a84632
+ *                       offColor: #a84632,
+ *                       id: string
  *                    }
  */
 function _getOutputLayerLocations(neat, width, height) {
@@ -55,7 +58,25 @@ function _getOutputLayerLocations(neat, width, height) {
     const increments = 1 / (outputNumber + 1);
     const result = [];
     for (let i = 1; i <= outputNumber; i++) {
-        result.push({ x: width * (7/8), y: i * (height * increments), onColor: ON_COLOR, offColor: OFF_COLOR });
+        const nodeId = neat.nodes[neat.inputNumber + i-1].id;
+        result.push({ x: width * (7/8), y: i * (height * increments), onColor: ON_COLOR, offColor: OFF_COLOR, id: nodeId });
+    }
+    return result;
+}
+
+/**
+ * Gets the line informations of neat connections
+ * @param {Neat} neat The neat to get connections for
+ */
+function _getConnectionLines(neat, inputLayer, outputLayer) {
+    const result = [];
+    for (let i = 0; i < neat.connections.length; i++) {
+        const connection = neat.connections[i];
+        const inNode = connection.inNode;
+        const outNode = connection.outNode;
+        const location1 = inputLayer.find(node => node.id === inNode.id);
+        const location2 = outputLayer.find(node => node.id === outNode.id);
+        result.push({lineLoc: [location1.x, location1.y, location2.x, location2.y], onColor: ON_COLOR, offColor: OFF_COLOR });
     }
     return result;
 }

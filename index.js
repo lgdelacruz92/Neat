@@ -14,6 +14,7 @@ function draw() {
     let pp = pnprint(neat, WIDTH, HEIGHT);
     printInputLayer(pp);
     printOutputLayer(pp);
+    printConnections(pp);
 }
 
 /**
@@ -39,5 +40,20 @@ function printOutputLayer(pp) {
         noStroke();
         fill(nodeLoc.onColor);
         circle(nodeLoc.x, nodeLoc.y, NODE_RADIUS);
+    }
+}
+
+/**
+ * Function that prints the connection lines
+ * @param {Object} pp The pnprint information
+ */
+function printConnections(pp) {
+    for (let i = 0; i < pp.connections.length; i++) {
+        const connectionMetaData = pp.connections[i];
+        const lineLoc = connectionMetaData.lineLoc;
+        const color = connectionMetaData.onColor;
+        stroke(color);
+        strokeWeight(2);
+        line(lineLoc[0], lineLoc[1], lineLoc[2], lineLoc[3]);
     }
 }
