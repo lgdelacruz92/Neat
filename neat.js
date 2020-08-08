@@ -126,8 +126,8 @@ class Neat {
         const inNode = connection.inNode;
         const outNode = connection.outNode;
         const newNode = new Node(uuid());
-        const newConnection1 = new Connection(uuid(), 0, true);
-        const newConnection2 = new Connection(uuid(), 0, true);
+        const newConnection1 = new Connection(uuid(), Math.random(), true);
+        const newConnection2 = new Connection(uuid(), Math.random(), true);
         newConnection1.inNode = inNode;
         newConnection1.outNode = newNode;
         newConnection2.inNode = newNode;
