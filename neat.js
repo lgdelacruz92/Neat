@@ -30,7 +30,7 @@ class Neat {
 
     /**
      * Fills it's nodes with the proper nodes
-     * @param {Neat} newNeat The new Neat copy
+     * @param {Neat} newNeat The new Neat
      */
     _fillNodesFromConnections(newNeat) {
         newNeat.nodes = [];
@@ -188,39 +188,15 @@ class Neat {
     crossOver(otherNeat) {
 
         const connectionPairs = this._getConnectionPairs(otherNeat);
-        const parentNodes = this._getParentNodes(otherNeat);
         const innovationNumbers = Object.keys(connectionPairs);
         
         // Make new child
         const newNeatChild = new Neat(this.inputNumber, this.outputNumber);
         newNeatChild.connections = []; //
         this._produceChildConnections(newNeatChild, innovationNumbers, connectionPairs);
+        this._fillNodesFromConnections(newNeatChild);
         
         return newNeatChild;
-    }
-
-    /**
-     * Builds a new child nodes for the child
-     * @param {Neat} newNeatChild The Neat child
-     */
-    _buildChildNodes(newNeatChild, nodes) {
-        const connections = newNeatChild.connections;
-    }
-
-    /**
-     * Gets the nodes of this and otherNeat
-     * @param {Neat} otherNeat The Neat crossing over with
-     */
-    _getParentNodes(otherNeat) {
-        const alreadyExists = {};
-        const nodes = [];
-        this.nodes.forEach(n => {
-            if (!alreadyExists[n.id]) nodes.push(n.copy());
-        });
-        otherNeat.nodes.forEach(n => {
-            if (!alreadyExists[n.id]) nodes.push(n.copy());
-        });
-        return nodes;
     }
 
     /**
@@ -229,8 +205,8 @@ class Neat {
      */
     _getConnectionPairs(otherNeat) {
         const connectionPairs = {};
-        this.connections.forEach(cnn => { this._fillNodePairs(cnn, connectionPairs) });
-        otherNeat.connections.forEach(cnn => { this._fillNodePairs(cnn, connectionPairs)});
+        this.connections.forEach(cnn => { this._fillConnectionPairs(cnn, connectionPairs) });
+        otherNeat.connections.forEach(cnn => { this._fillConnectionPairs(cnn, connectionPairs)});
         return connectionPairs;
     }
 
@@ -261,7 +237,7 @@ class Neat {
      * @param {Connection} cnn The Connection to append
      * @param {Object} nodePairs Mapping of the node pairs
      */
-    _fillNodePairs(cnn, nodePairs) {
+    _fillConnectionPairs(cnn, nodePairs) {
         if (nodePairs[cnn.in]) {
             nodePairs[cnn.in].push(cnn);
         } else {
