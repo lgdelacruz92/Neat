@@ -42,7 +42,7 @@ class Neat {
             this.inputNodeIds[newId] = true;
             this.nodes.push(new Node(newId));
         }
-        
+
         const totalNodes = this.inputNumber + this.outputNumber;
         for (let i = this.inputNumber; i < totalNodes; i++) {
             this.nodes.push(new Node(uuid()));
@@ -102,6 +102,10 @@ class Neat {
         this.connections.push(newConnection2);
     }
 
+    /**
+     * This activates the network according to the inputs
+     * @param {Array} inputs The inputs of the network in array format and normalized
+     */
     activate(inputs) {
         this.nodes.map(n => { n.value = 0; });
         if (!Array.isArray(inputs)) throw Error('Invalid type: inputs must be an array.');
