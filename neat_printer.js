@@ -12,7 +12,7 @@ function pnprint(neat, width, height) {
     const outputLayer = _getOutputLayerLocations(neat, width, height);
     const hiddenLayers = _getHiddenLayers(neat, width, height);
     const connections = _getConnectionLines(neat, inputLayer, outputLayer, hiddenLayers);
-    return {inputLayer, outputLayer, hiddenLayers, connections};
+    return { inputLayer, outputLayer, hiddenLayers, connections };
 }
 
 /**
@@ -34,8 +34,13 @@ function _getInputLayerLocations(neat, width, height) {
     const increments = 1 / (inputNumber + 1);
     const result = [];
     for (let i = 1; i <= inputNumber; i++) {
-        const nodeId = neat.nodes[i-1].id;
-        result.push({ x: width / 8, y: i * (height * increments), onColor: ON_COLOR, offColor: OFF_COLOR, id: nodeId });
+        const node = neat.nodes[i - 1];
+        result.push({ 
+            x: width / 8,
+            y: i * (height * increments),
+            onColor: ON_COLOR,
+            offColor: OFF_COLOR,
+            id: node.id});
     }
     return result;
 }
@@ -59,8 +64,8 @@ function _getOutputLayerLocations(neat, width, height) {
     const increments = 1 / (outputNumber + 1);
     const result = [];
     for (let i = 1; i <= outputNumber; i++) {
-        const nodeId = neat.nodes[neat.inputNumber + i-1].id;
-        result.push({ x: width * (7/8), y: i * (height * increments), onColor: ON_COLOR, offColor: OFF_COLOR, id: nodeId });
+        const nodeId = neat.nodes[neat.inputNumber + i - 1].id;
+        result.push({ x: width * (7 / 8), y: i * (height * increments), onColor: ON_COLOR, offColor: OFF_COLOR, id: nodeId });
     }
     return result;
 }
@@ -82,13 +87,13 @@ function _getConnectionLines(neat, inputLayer, outputLayer, hiddenLayers) {
         const location3 = hiddenLayers.find(node => node.id === outNode.id);
 
         if (location1 && location3) {
-            result.push({lineLoc: [location1.x, location1.y, location3.x, location3.y], onColor: ON_COLOR, offColor: OFF_COLOR });
+            result.push({ lineLoc: [location1.x, location1.y, location3.x, location3.y], onColor: ON_COLOR, offColor: OFF_COLOR });
         } else if (location1 && location2) {
-            result.push({lineLoc: [location1.x, location1.y, location2.x, location2.y], onColor: ON_COLOR, offColor: OFF_COLOR });
+            result.push({ lineLoc: [location1.x, location1.y, location2.x, location2.y], onColor: ON_COLOR, offColor: OFF_COLOR });
         } else if (location0 && location3) {
-            result.push({lineLoc: [location0.x, location0.y, location3.x, location3.y], onColor: ON_COLOR, offColor: OFF_COLOR });
+            result.push({ lineLoc: [location0.x, location0.y, location3.x, location3.y], onColor: ON_COLOR, offColor: OFF_COLOR });
         } else if (location0 && location2) {
-            result.push({lineLoc: [location0.x, location0.y, location2.x, location2.y], onColor: ON_COLOR, offColor: OFF_COLOR });
+            result.push({ lineLoc: [location0.x, location0.y, location2.x, location2.y], onColor: ON_COLOR, offColor: OFF_COLOR });
         } else {
             throw Error('There should never be a situation where whe cant find a node');
         }
@@ -116,7 +121,10 @@ function _getHiddenLayers(neat, width, height) {
     const result = [];
     const numHiddenLayers = totalNodes - neat.inputNumber - neat.outputNumber;
     for (let i = 1; i <= numHiddenLayers; i++) {
-        const randomXHiddenLocation = (Math.random() *7)/8 + (1/8);
+        let randomXHiddenLocation = (Math.random() * 7) / 8;
+        if (randomXHiddenLocation < (1 / 8)) {
+            randomXHiddenLocation += (1 / 8);
+        }
         const increments = 1 / (numHiddenLayers + 1);
         const nodeId = neat.nodes[hiddenLayerStartIndex + i].id;
 

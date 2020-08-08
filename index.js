@@ -7,7 +7,12 @@ const WIDTH = 600;
 
 function setup() {
     createCanvas(WIDTH, HEIGHT);
-    neat = new Neat(4, 1);
+    neat = new Neat(4, 3);
+    neat.mutate(true);
+    neat.mutate(true);
+    neat.mutate(true);
+    neat.mutate(true);
+    neat.mutate(true);
     neat.mutate(true);
     neat.mutate(true);
     pp = pnprint(neat, WIDTH, HEIGHT);
@@ -15,10 +20,10 @@ function setup() {
 
 function draw() {
     background(0);
+    printConnections(pp);
     printInputLayer(pp);
     printOutputLayer(pp);
     printHiddenLayers(pp);
-    printConnections(pp);
 }
 
 /**
@@ -29,7 +34,7 @@ function printInputLayer(pp) {
     for (let i = 0; i < pp.inputLayer.length; i++) {
         const nodeLoc = pp.inputLayer[i];
         noStroke();
-        fill(nodeLoc.onColor);
+        fill(150, 200, 200);
         circle(nodeLoc.x, nodeLoc.y, NODE_RADIUS);
     }
 }
@@ -42,7 +47,7 @@ function printOutputLayer(pp) {
     for (let i = 0; i < pp.outputLayer.length; i++) {
         const nodeLoc = pp.outputLayer[i];
         noStroke();
-        fill(nodeLoc.onColor);
+        fill(150, 200, 200);
         circle(nodeLoc.x, nodeLoc.y, NODE_RADIUS);
     }
 }
@@ -56,7 +61,7 @@ function printConnections(pp) {
         const connectionMetaData = pp.connections[i];
         const lineLoc = connectionMetaData.lineLoc;
         const color = connectionMetaData.onColor;
-        stroke(color);
+        stroke(200, 200, 150);
         strokeWeight(2);
         line(lineLoc[0], lineLoc[1], lineLoc[2], lineLoc[3]);
     }
