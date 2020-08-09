@@ -37,6 +37,49 @@ const _makeParent2_2 = () => {
 }
 
 /**
+ * Helper function for creating connections
+ */
+const _makeConnection = (num, expressed, inNode, outNode) => {
+    const newConnection = new Connection(num, 0, expressed);
+    newConnection.inNode = inNode;
+    newConnection.outNode = outNode;
+    return newConnection;
+}
+
+/**
+ * This function makes a very specific Neat instance
+ */
+const _makePaperExampleParent1 = () => {
+    const neat = new Neat(3, 1);
+    neat.nodes.push(new Node(4));
+    neat.connections = [];
+    neat.connections.push(_makeConnection(0, true, neat.nodes[0], neat.nodes[4]));
+    neat.connections.push(_makeConnection(1, true, neat.nodes[1], neat.nodes[4]));
+    neat.connections.push(_makeConnection(3, false, neat.nodes[1], neat.nodes[3]));
+    neat.connections.push(_makeConnection(4, true, neat.nodes[2], neat.nodes[3]));
+    neat.connections.push(_makeConnection(5, true, neat.nodes[4], neat.nodes[3]));
+    return neat;
+}
+
+/**
+ * This function makes a very specific Neat instance
+ */
+const _makePaperExampleParent2 = () => {
+    const neat = new Neat(3, 1);
+    neat.nodes.push(new Node(4));
+    neat.nodes.push(new Node(5));
+    neat.connections = [];
+    neat.connections.push(_makeConnection(0, false, neat.nodes[0], neat.nodes[4]));
+    neat.connections.push(_makeConnection(1, true, neat.nodes[1], neat.nodes[4]));
+    neat.connections.push(_makeConnection(2, true, neat.nodes[2], neat.nodes[4]));
+    neat.connections.push(_makeConnection(3, false, neat.nodes[1], neat.nodes[3]));
+    neat.connections.push(_makeConnection(5, true, neat.nodes[4], neat.nodes[3]));
+    neat.connections.push(_makeConnection(6, true, neat.nodes[0], neat.nodes[5]));
+    neat.connections.push(_makeConnection(7, true, neat.nodes[5], neat.nodes[4]));
+    return neat;
+}
+
+/**
  * Tests
  */
 
@@ -202,6 +245,59 @@ const test_neat_23 = () => {
     assertEqualNoTitle(childNeat.connections[8].outNode.id, 5);
 }
 
+const test_neat_24 = () => {
+    const parent1 = _makePaperExampleParent1();
+    const parent2 = _makePaperExampleParent2();
+
+    const child = parent1.crossOver(parent2);
+
+    for (let i = 0; i < child.nodes.length; i++) {
+        assertEqual(child.nodes[i].id, i, 'Cross over using example in Neat paper should be accurate.');
+    }
+
+    // Connection 1
+    assertEqualNoTitle(child.connections[0].inNode.id, 0);
+    assertEqualNoTitle(child.connections[0].outNode.id, 4);
+    assertEqualNoTitle(child.connections[0].expressed === true || child.connections[0].expressed === false, true);
+
+    // Connection 2
+    assertEqualNoTitle(child.connections[1].inNode.id, 1);
+    assertEqualNoTitle(child.connections[1].outNode.id, 4);
+    assertEqualNoTitle(child.connections[1].expressed, true);
+
+
+    // Connection 3
+    assertEqualNoTitle(child.connections[2].inNode.id, 2);
+    assertEqualNoTitle(child.connections[2].outNode.id, 4);
+    assertEqualNoTitle(child.connections[2].expressed, true);
+
+    // Connection 4
+    assertEqualNoTitle(child.connections[3].inNode.id, 1);
+    assertEqualNoTitle(child.connections[3].outNode.id, 3);
+    assertEqualNoTitle(child.connections[3].expressed, false);
+
+    // Connection 5
+    assertEqualNoTitle(child.connections[4].inNode.id, 2);
+    assertEqualNoTitle(child.connections[4].outNode.id, 3);
+    assertEqualNoTitle(child.connections[4].expressed, true);
+
+    // Connection 6
+    assertEqualNoTitle(child.connections[5].inNode.id, 4);
+    assertEqualNoTitle(child.connections[5].outNode.id, 3);
+    assertEqualNoTitle(child.connections[5].expressed, true);
+
+    // Connection 7
+    assertEqualNoTitle(child.connections[6].inNode.id, 0);
+    assertEqualNoTitle(child.connections[6].outNode.id, 5);
+    assertEqualNoTitle(child.connections[6].expressed, true);
+
+    // Connection 7
+    assertEqualNoTitle(child.connections[7].inNode.id, 5);
+    assertEqualNoTitle(child.connections[7].outNode.id, 4);
+    assertEqualNoTitle(child.connections[7].expressed, true);
+}
+
 test_neat_21();
 test_neat_22();
 test_neat_23();
+test_neat_24();
