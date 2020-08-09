@@ -7,7 +7,9 @@ const WIDTH = 600;
 
 function setup() {
     createCanvas(WIDTH, HEIGHT);
-    neat = new Neat(4, 3);
+    neat1 = _makePaperExampleParent1();
+    neat2 = _makePaperExampleParent2();
+    neat = neat1.crossOver(neat2);
     pp = pnprint(neat, WIDTH, HEIGHT);
     count = 0;
 }
@@ -55,7 +57,11 @@ function printConnections(pp) {
         const connectionMetaData = pp.connections[i];
         const lineLoc = connectionMetaData.lineLoc;
         const color = connectionMetaData.onColor;
-        stroke(200, 200, 150);
+        if (connectionMetaData.expressed) {
+            stroke(color);
+        } else {
+            stroke(connectionMetaData.offColor);
+        }
         strokeWeight(2);
         line(lineLoc[0], lineLoc[1], lineLoc[2], lineLoc[3]);
     }

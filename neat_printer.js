@@ -87,15 +87,15 @@ function _getConnectionLines(neat, inputLayer, outputLayer, hiddenLayers) {
         const location3 = hiddenLayers.find(node => node.id === outNode.id);
 
         if (location1 && location3) {
-            result.push({ lineLoc: [location1.x, location1.y, location3.x, location3.y], onColor: ON_COLOR, offColor: OFF_COLOR });
+            result.push({ lineLoc: [location1.x, location1.y, location3.x, location3.y], onColor: ON_COLOR, offColor: OFF_COLOR, expressed: connection.expressed });
         } else if (location1 && location2) {
-            result.push({ lineLoc: [location1.x, location1.y, location2.x, location2.y], onColor: ON_COLOR, offColor: OFF_COLOR });
+            result.push({ lineLoc: [location1.x, location1.y, location2.x, location2.y], onColor: ON_COLOR, offColor: OFF_COLOR, expressed: connection.expressed });
         } else if (location0 && location3) {
-            result.push({ lineLoc: [location0.x, location0.y, location3.x, location3.y], onColor: ON_COLOR, offColor: OFF_COLOR });
+            result.push({ lineLoc: [location0.x, location0.y, location3.x, location3.y], onColor: ON_COLOR, offColor: OFF_COLOR, expressed: connection.expressed });
         } else if (location0 && location2) {
-            result.push({ lineLoc: [location0.x, location0.y, location2.x, location2.y], onColor: ON_COLOR, offColor: OFF_COLOR });
+            result.push({ lineLoc: [location0.x, location0.y, location2.x, location2.y], onColor: ON_COLOR, offColor: OFF_COLOR, expressed: connection.expressed });
         } else if (location2 && location3) {
-            result.push({ lineLoc: [location3.x, location3.y, location1.x, location1.y], onColor: ON_COLOR, offColor: OFF_COLOR });
+            result.push({ lineLoc: [location3.x, location3.y, location1.x, location1.y], onColor: ON_COLOR, offColor: OFF_COLOR, expressed: connection.expressed });
         } else {
             throw Error('There should never be a situation where whe cant find a node');
         }
