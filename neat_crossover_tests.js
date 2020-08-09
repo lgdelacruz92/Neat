@@ -55,6 +55,42 @@ const test_neat_22 = () => {
     for (let i = 0; i < childNeat.nodes.length; i++) {
         assertEqualNoTitle(childNeat.nodes[i].id, i);
     }
+
+    for (let i = 0; i < childNeat.connections.length; i++) {
+        assertEqualNoTitle(childNeat.connections[i].in, i);
+    }
+
+    // Connection 0
+    assertEqualNoTitle(childNeat.connections[0].inNode.id, 0);
+    assertEqualNoTitle(childNeat.connections[0].outNode.id, 3);
+
+    // Connection 1
+    assertEqualNoTitle(childNeat.connections[1].inNode.id, 0);
+    assertEqualNoTitle(childNeat.connections[1].outNode.id, 4);
+
+    // Connection 2
+    assertEqualNoTitle(childNeat.connections[2].inNode.id, 1);
+    assertEqualNoTitle(childNeat.connections[2].outNode.id, 3);
+
+    // Connection 3
+    assertEqualNoTitle(childNeat.connections[3].inNode.id, 1);
+    assertEqualNoTitle(childNeat.connections[3].outNode.id, 4);
+
+    // Connection 4
+    assertEqualNoTitle(childNeat.connections[4].inNode.id, 2);
+    assertEqualNoTitle(childNeat.connections[4].outNode.id, 3);
+
+    // Connection 5
+    assertEqualNoTitle(childNeat.connections[5].inNode.id, 2);
+    assertEqualNoTitle(childNeat.connections[5].outNode.id, 4);
+
+    // Connection 6
+    assertEqualNoTitle(childNeat.connections[6].inNode.id, 1);
+    assertEqualNoTitle(childNeat.connections[6].outNode.id, 5);
+
+    // Connection 7
+    assertEqualNoTitle(childNeat.connections[7].inNode.id, 5);
+    assertEqualNoTitle(childNeat.connections[7].outNode.id, 3);
 }
 
 test_neat_21(); 

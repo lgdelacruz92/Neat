@@ -238,7 +238,7 @@ class Neat {
                 const randNum = Math.random();
                 newNeatChild.connections.push(connectionPair[randNum > 0.5 ? 1 : 0].copy());
             } else {
-                throw Error(`This should never happen. Something went wrong. function: crossOver ${connectionPair}`);
+                throw Error(`This should never happen.  Something went wrong. function: crossOver ${connectionPair}`);
             }
         });
     }
