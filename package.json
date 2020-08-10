@@ -1,0 +1,17 @@
+{
+  "name": "neat",
+  "version": "1.0.0",
+  "description": "A NEAT class for genetic algorithm",
+  "main": "main.js",
+  "repository": "https://github.com/lgdelacruz92/Neat.git",
+  "author": "Lester Dela Cruz",
+  "license": "MIT",
+  "private": false,
+  "devDependencies": {
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12"
+  },
+  "dependencies": {
+    "path": "^0.12.7"
+  }
+}

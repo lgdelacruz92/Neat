@@ -1,3 +1,6 @@
+import Node from './node';
+import Connection from './connection';
+
 const random = (lowerBound, upperBound) => {
     return Math.random() * upperBound + lowerBound;
 }
@@ -265,3 +268,5 @@ class Neat {
         }
     }
 }
+
+export default Neat;
