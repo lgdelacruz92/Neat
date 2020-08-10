@@ -199,7 +199,15 @@ class Neat {
         for (let i = this.inputNumber; i < this.inputNumber + this.outputNumber; i++) {
             result.push(this.nodes[i].value);
         }
-        return result;
+        return result.map(r => this._sigmoid(r));
+    }
+
+    /**
+     * Sigmoid function of the output
+     * @param {number} x The number to convert to sigmoid
+     */
+    _sigmoid(x) {
+        return (Math.pow(2.72, x))/(Math.pow(2.72, x) + 1);
     }
 
     /**
