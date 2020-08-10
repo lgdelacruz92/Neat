@@ -17,7 +17,8 @@ const test_neat_propagation_2 = () => {
     neat.connections[4].weight = 0.6;
     neat.connections[5].weight = 0.1;
     neat.connections[6].weight = 0.7;
-    assertEqual(neat.activate([0.5, 0.3, 0.08])[0], 0.1254, 'Neat propagation on complicated network should be accurate: test 2.');
+    const result = neat.activate([0.5, 0.3, 0.08])[0];
+    assertEqual(0.1253 < result && result < 0.1255, true, 'Neat propagation on complicated network should be accurate: test 2.');
 }
 
 test_neat_propagation_1();

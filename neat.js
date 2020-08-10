@@ -180,8 +180,17 @@ class Neat {
         for (let i = 0; i < this.inputNumber; i++) {
             this.nodes[i].value = inputs[i];
         }
+
+        const outputConnections = [];
         for (let i = 0; i < this.connections.length; i++) {
-            this.connections[i].activate();
+            if (this.outputNodeIds[this.connections[i].outNode.id] === undefined) {
+                this.connections[i].activate();
+            } else {
+                outputConnections.push(this.connections[i]);
+            }
+        }
+        for (let i = 0; i < outputConnections.length; i++) {
+            outputConnections[i].activate();
         }
         const result = [];
         for (let i = this.inputNumber; i < this.inputNumber + this.outputNumber; i++) {
