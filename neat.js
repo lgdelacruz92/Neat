@@ -27,6 +27,8 @@ class Neat {
         newNeat.outputNodeIds = JSON.parse(JSON.stringify(this.outputNodeIds));
         newNeat.connections = this.connections.map(cnn => cnn.copy());
         this._fillNodesFromConnections(newNeat);
+        this._updateNodeNumber();
+        this._updateConnectionNumber();
         return newNeat;
     }
 
@@ -124,7 +126,7 @@ class Neat {
             node2 = this.nodes[Math.max(index1, index2)];
         }
 
-        const newConnection = new Connection(this.connectionCurrentNumber, random(-2, 2), true);
+        const newConnection = new Connection(this.connectionCurrentNumber + 1, random(-2, 2), true);
         if (this._isHiddenLayerNode(node2) && this.outputNodeIds[node1.id]) {
             newConnection.inNode = node2;
             newConnection.outNode = node1;
@@ -133,7 +135,7 @@ class Neat {
             newConnection.outNode = node2;
         }
         this.connections.push(newConnection);
-        this.connectionCurrentNumber += 1;
+        this._updateConnectionNumber();
     }
 
     /**
@@ -153,8 +155,8 @@ class Neat {
         const inNode = connection.inNode;
         const outNode = connection.outNode;
         const newNode = new Node(this.nodeCurrentNumber);
-        const newConnection1 = new Connection(this.connectionCurrentNumber, random(-2, 2), true);
-        const newConnection2 = new Connection(this.connectionCurrentNumber + 1, random(-2, 2), true);
+        const newConnection1 = new Connection(this.connectionCurrentNumber + 1, random(-2, 2), true);
+        const newConnection2 = new Connection(this.connectionCurrentNumber + 2, random(-2, 2), true);
         newConnection1.inNode = inNode;
         newConnection1.outNode = newNode;
         newConnection2.inNode = newNode;
@@ -164,8 +166,8 @@ class Neat {
         this.connections.push(newConnection1);
         this.connections.push(newConnection2);
 
-        this.nodeCurrentNumber += 1;
-        this.connectionCurrentNumber += 2;
+        this._updateNodeNumber();
+        this._updateConnectionNumber();
     }
 
     /**
@@ -296,9 +298,10 @@ class Neat {
         
         // Make new child
         const newNeatChild = new Neat(this.inputNumber, this.outputNumber);
-        newNeatChild.connections = []; //
         this._produceChildConnections(newNeatChild, innovationNumbers, connectionPairs);
         this._fillNodesFromConnections(newNeatChild);
+        this._updateNodeNumber();
+        this._updateConnectionNumber();
         
         return newNeatChild;
     }
@@ -323,6 +326,8 @@ class Neat {
      * @return void
      */
     _produceChildConnections(newNeatChild, innovationNumbers, nodePairs) {
+        newNeatChild.connections = []; //
+        newNeatChild.connectionCurrentNumber = 0;
         innovationNumbers.forEach(innoNumber => {
             const connectionPair = nodePairs[innoNumber];
             if (connectionPair.length === 1) {
@@ -347,5 +352,31 @@ class Neat {
         } else {
             nodePairs[cnn.in] = [cnn];
         }
+    }
+
+    /**
+     * Updates the node number based on node number max
+     */
+    _updateNodeNumber() {
+        let max = 0;
+        for (let i = 0; i < this.nodes.length; i++) {
+            if (this.nodes[i].id > max) {
+                max = this.nodes[i].id;
+            }
+        }
+        this.nodeCurrentNumber = max;
+    }
+
+    /**
+     * Updates the connection number
+     */
+    _updateConnectionNumber() {
+        let max = 0;
+        for (let i = 0; i < this.connections.length; i++) {
+            if (this.connections[i].in > max) {
+                max = this.connections[i].in;
+            }
+        }
+        this.connectionCurrentNumber = max;
     }
 }
