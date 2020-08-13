@@ -302,6 +302,8 @@ class Neat {
         this._fillNodesFromConnections(newNeatChild);
         this._updateNodeNumber();
         this._updateConnectionNumber();
+        newNeatChild._updateNodeNumber();
+        newNeatChild._updateConnectionNumber();
         
         return newNeatChild;
     }
