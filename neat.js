@@ -94,6 +94,44 @@ class Neat {
     }
 
     /**
+     * True if there is a cycle in the connection false otherwise
+     * @return {boolean}
+     */
+    noCycle() {
+        if (this.connections.length === 0) throw Error('The connections are empty.');
+        if (this.nodes.length === 0) throw Error('The nodes are empty.');
+        // * DFS search on all input nodes
+        for (let i = 0; i < this.inputNumber; i++) {
+
+            const visited = {}
+            let currentNode = this.nodes[i];
+            let connections = this._findInConnections(currentNode.id);
+            
+            if (connections.length === 0) {
+                return false;
+            }
+
+            let connection = connections[0];
+
+            while (connection !== null && connection.outNode !== null) {
+                if (visited[currentNode.id] === true) {
+                    return false;
+                }
+                visited[currentNode.id] = true;
+
+                currentNode = connection.outNode;
+                connections = this._findInConnections(currentNode.id);
+                if (connections.length > 0) {
+                    connection = connections[0];
+                } else {
+                    connection = null;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
      * Mutates the network
      *    - If no option is passed then it randomly selects a mutation method.
      * @param {bool} addNode Optional parameter to choose to mutate using addNode
@@ -199,35 +237,35 @@ class Neat {
         const inConnectionsMap = {};
 
         // Activate
-        while(!this._allStable(nodeStability)) {
-            for (let i = 0; i < this.nodes.length; i++) {
-                if (this.inputNodeIds[this.nodes[i].id] === undefined && !nodeStability[i]) {
-                    // Find in connections
-                    let connections = [];
-                    if (inConnectionsMap[this.nodes[i].id] !== undefined) {
-                        connections = inConnectionsMap[this.nodes[i].id];
-                    } else {
-                        connections = this._findOutConnections(this.nodes[i].id);
-                    }
+        // while(!this._allStable(nodeStability)) {
+        //     for (let i = 0; i < this.nodes.length; i++) {
+        //         if (this.inputNodeIds[this.nodes[i].id] === undefined && !nodeStability[i]) {
+        //             // Find in connections
+        //             let connections = [];
+        //             if (inConnectionsMap[this.nodes[i].id] !== undefined) {
+        //                 connections = inConnectionsMap[this.nodes[i].id];
+        //             } else {
+        //                 connections = this._findOutConnections(this.nodes[i].id);
+        //             }
 
-                    const inNodeSet = connections.map(cnn => {
-                        return cnn.inNode;
-                    });
+        //             const inNodeSet = connections.map(cnn => {
+        //                 return cnn.inNode;
+        //             });
 
-                    if (this._isSetOfNodesStable(inNodeSet, nodeStability)) {
-                        connections.forEach(cnn => { 
-                            cnn.activate(); 
-                        });
-                        nodeStability[i] = true;
-                    } else if (inNodeSet.length === 0) {
-                        connections.forEach(cnn => { 
-                            cnn.activate(); 
-                        });
-                        nodeStability[i] = true;
-                    }
-                }
-            }
-        }
+        //             if (this._isSetOfNodesStable(inNodeSet, nodeStability)) {
+        //                 connections.forEach(cnn => { 
+        //                     cnn.activate(); 
+        //                 });
+        //                 nodeStability[i] = true;
+        //             } else if (inNodeSet.length === 0) {
+        //                 connections.forEach(cnn => { 
+        //                     cnn.activate(); 
+        //                 });
+        //                 nodeStability[i] = true;
+        //             }
+        //         }
+        //     }
+        // }
 
         const result = [];
         for (let i = this.inputNumber; i < this.inputNumber + this.outputNumber; i++) {
@@ -237,13 +275,27 @@ class Neat {
     }
 
     /**
-     * Finds out connections of a particular node
-     * @param {Node} node The node to find connections for
+     * Finds in connections of a particular node
+     * @param {Node} nodeId The node id to find connections for
      */
-    _findOutConnections(node) {
+    _findInConnections(nodeId) {
         const connections = [];
         for (let i = 0; i < this.connections.length; i++) {
-            if (node === this.connections[i].outNode.id) {
+            if (nodeId === this.connections[i].inNode.id) {
+                connections.push(this.connections[i]);
+            }
+        }
+        return connections;
+    }
+
+    /**
+     * Finds out connections of a particular node
+     * @param {Node} nodeId The node id to find connections for
+     */
+    _findOutConnections(nodeId) {
+        const connections = [];
+        for (let i = 0; i < this.connections.length; i++) {
+            if (nodeId === this.connections[i].outNode.id) {
                 connections.push(this.connections[i]);
             }
         }
