@@ -2,6 +2,19 @@ const random = (lowerBound, upperBound) => {
     return Math.random() * upperBound + lowerBound;
 }
 
+const NEAT = {
+    /**
+     * Converts a 
+     * @param {Object} json The neat in json object
+     */
+    fromJSON: (json) => {
+        const neat = new Neat(json.inputNumber, json.outputNumber);
+        neat.replaceNodes(json.nodes);
+        neat.replaceConnections(json.connections);
+        return neat;
+    }
+}
+
 class Neat {
     constructor(inputNumber, outputNumber) {
         if (!inputNumber) throw Error('Value required: inputNumber.');
@@ -15,6 +28,45 @@ class Neat {
         this.connectionCurrentNumber = 0;
         this._initNodes();
         this._initConnections();
+    }
+
+    /**
+     * Replace nodes
+     * @param {Array} nodesJSON The nodes json array
+     */
+    replaceNodes(nodesJSON) {
+        this.nodes = [];
+        for (let i = 0; i < nodesJSON.length; i++) {
+            this.nodes.push(new Node(nodesJSON[i].identificationNumber, nodesJSON[i].value));
+        }
+        this._updateNodeNumber();
+    }
+
+    /**
+     * Replaces connections from array of json formatten connections
+     * @param {Array} connectionsJSON The connections json array
+     */
+    replaceConnections(connectionsJSON) {
+        this.connections = [];
+        for (let i = 0; i < connectionsJSON.length; i++) {
+            const connection = new Connection(connectionsJSON[i].innovationNumber, connectionsJSON[i].weight, connectionsJSON[i].expressed);
+            const inNodeResult = this.nodes.find(n => n.id === connectionsJSON[i].inNode);
+            if (inNodeResult === undefined) {
+                throw Error(`Connection indexed ${i} is improperly formatted ${connectionsJSON[i].inNode} not found.`);
+            } else {
+                connection.inNode = inNodeResult;
+            }
+
+            const outNodeResult = this.nodes.find(n => n.id === connectionsJSON[i].outNode);
+            if (outNodeResult === undefined) {
+                throw Error(`Connection indexed ${i} is improperly formatted ${connectionsJSON[i].outNode} not found.`);
+            } else {
+                connection.inNode = outNodeResult;
+            }
+
+            this.connections.push(connection);
+        }
+        this._updateConnectionNumber();
     }
 
     /**
