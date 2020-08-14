@@ -1,8 +1,12 @@
 let ndNodes;
+let ndConnection;
+let mousePrsd;
 function setup() {
     const canvas = createCanvas(400, 400);
     canvas.parent("viewport");
     ndNodes = [];
+    ndConnection = new NDConnection();
+    mousePrsd = false; 
 
     initializeActions();
 }
@@ -10,6 +14,8 @@ function setup() {
 function draw() {
     background(0);
     drawNodes();
+    ndConnection.draw();
+    ndConnection.update();
 }
 
 /**
@@ -42,6 +48,8 @@ function mousePressed() {
         const targetNDNode = possibleTargetNDNodes[possibleTargetNDNodes.length - 1];
         targetNDNode.moving = true;
     }
+
+    mousePrsd = true;
 }
 
 /**
@@ -52,6 +60,7 @@ function mouseReleased() {
     for (let i = 0; i < ndNodes.length; i++) {
         ndNodes[i].moving = false;
     }
+    mousePrsd = false;
 }
 
 /**
