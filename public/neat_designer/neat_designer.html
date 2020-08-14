@@ -4,12 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width='device-width', initial-scale=1.0">
     <title>Neat Designer</title>
+    <link href="mui.min.css" rel="stylesheet" type="text/css" />
+    <link href="neat_designer.css" rel="stylesheet" type="text/css" />
+    <script src="../../lib/mui.min.js"></script>
 </head>
 <body>
+    <div class="container">
+        <div class="neat-designer">
+            <div id="viewport"></div>
+            <div class="buttons">
+                <button class="mui-btn mui-btn--primary mui-btn--raised">Add Node</button>
+            </div>
+        </div>
+    </div>
+
     <script src="../neat/node.js"></script>
     <script src="../neat/connection.js"></script>
     <script src="../neat/neat.js"></script>
+
+    <script src="nd_node.js"></script>
+    <script src="neat_designer.js"></script>
     <script src="../../lib/test_utils.js"></script>
     <script src="../../tests/neat_designer_test.js"></script>
+    <script src="../../lib/p5.min.js"></script>
 </body>
 </html>
