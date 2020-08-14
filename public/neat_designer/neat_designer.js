@@ -1,6 +1,5 @@
 let ndNodes;
 let ndConnection;
-let mousePrsd;
 function setup() {
     const canvas = createCanvas(400, 400);
     canvas.parent("viewport");
@@ -48,8 +47,6 @@ function mousePressed() {
         const targetNDNode = possibleTargetNDNodes[possibleTargetNDNodes.length - 1];
         targetNDNode.moving = true;
     }
-
-    mousePrsd = true;
 }
 
 /**
@@ -60,7 +57,6 @@ function mouseReleased() {
     for (let i = 0; i < ndNodes.length; i++) {
         ndNodes[i].moving = false;
     }
-    mousePrsd = false;
 }
 
 /**
@@ -74,12 +70,12 @@ function initializeActions() {
  * Initializes specifically the ADD NODE button
  */
 function initializeAddNodeAction() {
-    const addBtnEl = document.querySelector('.nd-add-button');
+    const addBtnEl = document.querySelector('.nd-add-node-button');
     if (addBtnEl) {
         addBtnEl.addEventListener('click', () => {
             ndNodes.push(new NDNode(random(0, width), random(0, height)));
         });
     } else {
-        throw Error('Button with class .nd-add-button is missing.');
+        throw Error('Button with class .nd-add-node-button is missing.');
     }
 }
