@@ -9,15 +9,6 @@ class NDNode {
      * Updates the NDNode one step
      */
     update() {
-        if (mousePressedAndDragged 
-            && dist(this.pos.x, this.pos.y, mouseX, mouseY) < this.r 
-            && !this.moving) {
-            this.moving = true;
-        }
-        if (!mousePressedAndDragged) {
-            this.moving = false;
-        }
-
         if (this.moving) {
             this.pos = createVector(mouseX, mouseY);
         }
@@ -28,7 +19,7 @@ class NDNode {
      */
     draw() {
         push();
-        noStroke();
+        stroke(255);
         fill(0, 200, 250);
         translate(this.pos.x, this.pos.y);
         circle(0, 0, this.r);

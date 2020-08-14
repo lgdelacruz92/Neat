@@ -1,22 +1,76 @@
-let ndNode;
-let mousePressedAndDragged;
+let ndNodes;
 function setup() {
     const canvas = createCanvas(400, 400);
     canvas.parent("viewport");
-    ndNode = new NDNode(100, 100);
-    mousePressedAndDragged = false;
+    ndNodes = [];
+
+    initializeActions();
 }
 
 function draw() {
     background(0);
-    ndNode.draw();
-    ndNode.update();
+    drawNodes();
 }
 
+/**
+ * Draws the nodes inside ndNodes
+ */
+function drawNodes() {
+    const movingNodes = ndNodes.filter(ndn => ndn.moving === true);
+    if (movingNodes > 1) {
+        throw Error('This should not happen. More than one nodes should not be moving.');
+    }
+    for (let i = 0; i < ndNodes.length; i++) {
+        ndNodes[i].draw();
+        ndNodes[i].update();
+    }
+}
+
+/**
+ * Function called when moused is pressed inside the canvas
+ * Assign which node to be moving
+ */
 function mousePressed() {
-    mousePressedAndDragged = true;
+    const possibleTargetNDNodes = [];
+    for (let i = 0; i < ndNodes.length; i++) {
+        if (dist(ndNodes[i].pos.x, ndNodes[i].pos.y, mouseX, mouseY) < ndNodes[i].r) {
+            possibleTargetNDNodes.push(ndNodes[i]);
+        }
+    }
+
+    if (possibleTargetNDNodes.length > 0) {
+        const targetNDNode = possibleTargetNDNodes[possibleTargetNDNodes.length - 1];
+        targetNDNode.moving = true;
+    }
 }
 
+/**
+ * Function called when moused is released
+ * 
+ */
 function mouseReleased() {
-    mousePressedAndDragged = false;
+    for (let i = 0; i < ndNodes.length; i++) {
+        ndNodes[i].moving = false;
+    }
+}
+
+/**
+ * Initializes the buttons on the screen
+ */
+function initializeActions() {
+    initializeAddNodeAction();
+}
+
+/**
+ * Initializes specifically the ADD NODE button
+ */
+function initializeAddNodeAction() {
+    const addBtnEl = document.querySelector('.nd-add-button');
+    if (addBtnEl) {
+        addBtnEl.addEventListener('click', () => {
+            ndNodes.push(new NDNode(random(0, width), random(0, height)));
+        });
+    } else {
+        throw Error('Button with class .nd-add-button is missing.');
+    }
 }
