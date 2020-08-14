@@ -31,6 +31,28 @@ class Neat {
     }
 
     /**
+     * Exports the Neat into it's JSON representation
+     * @return {Object}
+     */
+    toJSON() {
+        return {
+            inputNumber: this.inputNumber,
+            outputNumber: this.outputNumber,
+            connections: this.connections.map(cnn => ({
+                innovationNumber: cnn.in,
+                weight: cnn.weight,
+                expressed: cnn.expressed,
+                inNode: cnn.inNode.id,
+                outNode: cnn.outNode.id
+            })),
+            nodes: this.nodes.map(n => ({
+                identificationNumber: n.id,
+                value: n.value
+            }))
+        }
+    }
+
+    /**
      * Replace nodes
      * @param {Array} nodesJSON The nodes json array
      */
