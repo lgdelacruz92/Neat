@@ -52,6 +52,12 @@ const test_neat_designer_1 = () => {
     assertEqualNoTitle(neat.nodes[0].id, 0);
     assertEqualNoTitle(neat.nodes[1].id, 1);
     assertEqualNoTitle(neat.nodes[2].id, 2);
+    assertEqualNoTitle(neat.connections[0].weight, -0.3)
+    assertEqualNoTitle(neat.connections[1].weight, -0.4)
+    assertEqualNoTitle(neat.connections[0].inNode.id, 0);
+    assertEqualNoTitle(neat.connections[0].outNode.id, 2);
+    assertEqualNoTitle(neat.connections[1].inNode.id, 1);
+    assertEqualNoTitle(neat.connections[1].outNode.id, 2);
 }
 
 test_neat_designer_1();

@@ -61,7 +61,7 @@ class Neat {
             if (outNodeResult === undefined) {
                 throw Error(`Connection indexed ${i} is improperly formatted ${connectionsJSON[i].outNode} not found.`);
             } else {
-                connection.inNode = outNodeResult;
+                connection.outNode = outNodeResult;
             }
 
             this.connections.push(connection);
