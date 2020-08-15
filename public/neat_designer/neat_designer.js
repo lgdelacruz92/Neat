@@ -45,10 +45,12 @@ function drawNodes() {
  * Assign which node to be moving
  */
 function mousePressed(e) {
-    console.log(e);
     if (e.button === 0) {
         handleLeftClick();
+    } else if (e.button === 2) {
+        console.log('right click');
     }
+    return false;
 }
 
 /**
@@ -110,6 +112,7 @@ function mouseReleased(e) {
     if (e.button === 0) {
         handleLeftClickRelease();
     }
+    return false;
 }
 
 /**
@@ -134,6 +137,7 @@ function handleRightClick(e) {
 function initializeActions() {
     initializeAddNodeAction();
     initializeAddConnectionAction();
+    removeContextMenu();
 }
 
 /**
@@ -162,4 +166,18 @@ function initializeAddConnectionAction() {
     } else {
         throw Error('Button with class .nd-add-connection-button is missing.');
     }
+}
+
+/**
+ * Remove context menu on canvas
+ */
+function removeContextMenu() {
+    const canvas = document.querySelector('canvas');
+    if (canvas) {
+        canvas.oncontextmenu = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        };
+    }
+    
 }
