@@ -519,7 +519,7 @@ function getAllInputs() {
  */
 function validateNeat(neat) {
     if (neat !== null) {
-        if (neat.inputNumber + neat.outputNumber !== neat.nodes.length) {
+        if (neat.inputNumber + neat.outputNumber >= neat.nodes.length) {
             throw Error('Export not working correctly. The node numbers does not match.');
         }
         if (neat.inputNumber === undefined) {
