@@ -355,7 +355,7 @@ function exportNeat() {
     neat = {
         inputNumber: inputNodes.length,
         outputNumber: outputNodes.length,
-        nodes: nodes.map(n => ({ identificationNumber: n.number, value: n.node.value })),
+        nodes: nodes.map(n => ({ identificationNumber: n.node.number, value: n.node.value })),
         connections
     }
 
@@ -370,7 +370,15 @@ function exportNeat() {
 function outputNeatJSON(neatJSON) {
     const exportedNeatJSONOutput = document.querySelector('#exported-neat-json');
     if (exportedNeatJSONOutput) {
-        exportedNeatJSONOutput.innerHTML = JSON.stringify(neatJSON);
+        const neatAsString = prettifyJSON(neatJSON);
+        const neatAsArray = neatAsString.split('\n');
+        
+        for (let i = 0; i < neatAsArray.length; i++) {
+            const pEl = document.createElement('pre');
+            const textNode = document.createTextNode(neatAsArray[i]);
+            pEl.appendChild(textNode);
+            exportedNeatJSONOutput.appendChild(pEl);
+        }
     } else {
         throw Error('Something went wrong. Export neat JSON div is missing.');
     }

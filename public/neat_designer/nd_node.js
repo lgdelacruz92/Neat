@@ -7,6 +7,7 @@ class NDNode {
         this.color = createVector(0, 200, 250);
         this.id = uuidv4();
         this.number = null;
+        this.value = 0;
     }
 
     /**
