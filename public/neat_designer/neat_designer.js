@@ -339,7 +339,7 @@ function initializeExportAction() {
  */
 function exportNeat() {
     let neat = null;
-    
+    validateConnections();
     const inputNodes = getAllInputs();
     if (inputNodes.length === 0) {
         throw Error('No input nodes. Please put at least one node in input area.');
@@ -349,15 +349,77 @@ function exportNeat() {
     if (outputNodes.length === 0) {
         throw Error('No output nodes. Please put at least one node in input area.');
     }
-
-    validateConnections();
+    const nodes = grabNodes(inputNodes, outputNodes);
+    const connections = grabConnections();
 
     neat = {
         inputNumber: inputNodes.length,
         outputNumber: outputNodes.length,
+        nodes: nodes.map(n => ({ identificationNumber: n.number, value: n.node.value })),
+        connections
     }
 
     validateNeat(neat);
+    outputNeatJSON(neat);
+}
+
+/**
+ * Outputs the neat JSON into the ouput area
+ * @param {neatJSON} neat The neat JSON
+ */
+function outputNeatJSON(neatJSON) {
+    const exportedNeatJSONOutput = document.querySelector('#exported-neat-json');
+    if (exportedNeatJSONOutput) {
+        exportedNeatJSONOutput.innerHTML = JSON.stringify(neatJSON);
+    } else {
+        throw Error('Something went wrong. Export neat JSON div is missing.');
+    }
+}
+
+/**
+ * Grabs the connections
+ */
+function grabConnections() {
+    const connections = [];
+    for (let i = 0; i < ndConnections.length; i++) {
+        const nodeInStart = findNodeInStart(ndConnections[i]);
+        const nodeInEnd = findNodeInEnd(ndConnections[i]);
+        if (nodeInStart === null || nodeInEnd === null) {
+            throw Error('This connection is broken. Ensure it has an input and output.');
+        } else {
+            connections.push({ 
+                innovationNumber: ndConnections[i].number,
+                weight: ndConnections[i].weight,
+                expressed: ndConnections[i].expressed,
+                inNode: nodeInStart[0].number,
+                outNode: nodeInEnd[0].number
+            })
+        }
+    }
+    return connections;
+}
+
+/**
+ * Grabs the nodes
+ */
+function grabNodes(inputNodes, outputNodes) {
+
+    const alreadyInNode = {};
+    const nodes = [];
+    for (let i = 0; i < inputNodes.length; i++) {
+        nodes.push({ node: inputNodes[i], number: i });
+        alreadyInNode[inputNodes[i].id] = true;
+    }
+    for (let i = 0; i < outputNodes.length; i++) {
+        nodes.push({ node: outputNodes[i], number: i });
+        alreadyInNode[outputNodes[i].id] = true;
+    }
+    for (let i = 0; i < ndNodes.length; i++) {
+        if (alreadyInNode[ndNodes[i].id] === undefined) {
+            nodes.push({ node: ndNodes[i], number: i });
+        }
+    }
+    return nodes;
 }
 
 /**
@@ -382,7 +444,19 @@ function validateConnections() {
  * @param {Connection} connection The connection
  */
 function findNodeInStart(connection) {
-
+    const result = [];
+    for (let i = 0; i < ndNodes.length; i++) {
+        const r = dist(connection.start.x, connection.start.y, ndNodes[i].pos.x, ndNodes[i].pos.y);
+        if ( r < ndNodes[i].r) {
+            result.push(ndNodes[i]);
+        }
+    }
+    if (result.length > 1) {
+        console.log('%cThere is more than one node in the start of a connection. Please fix.', 'color: red');
+    } else if (result.length !== 1) {
+        console.log('%cThe start of a connection is not connected. Please connect it (red end) to a node.', 'color: red');
+    }
+    return result;
 }
 
 /**
@@ -398,9 +472,9 @@ function findNodeInEnd(connection) {
         }
     }
     if (result.length > 1) {
-        throw Error('There is more than one node in the end of a connection. Please fix.');
+        console.log('%cThere is more than one node in the end of a connection. Please fix.', 'color: red');
     } else if (result.length !== 1) {
-        throw Error('The end of a connection is not connected. Please connect it (blue end) to a node.');
+        console.log('%cThe end of a connection is not connected. Please connect it (blue end) to a node.', 'color: red');
     }
     return result;
 }

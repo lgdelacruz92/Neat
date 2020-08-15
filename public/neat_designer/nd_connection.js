@@ -13,7 +13,7 @@ class NDConnection {
         this.id = uuidv4();
         this.number = null;
         this.weight = parseInt(random(-2, 2) * 100) / 100;
-        this.expressed = null;
+        this.expressed = true;
     }
 
     /**
