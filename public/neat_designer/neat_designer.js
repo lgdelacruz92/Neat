@@ -27,6 +27,7 @@ function drawConnections() {
     for (let i = 0; i < ndConnections.length; i++) {
         ndConnections[i].draw();
         ndConnections[i].update();
+        ndConnections[i].number = i;
     }
 }
 

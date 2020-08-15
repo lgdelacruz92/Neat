@@ -11,6 +11,9 @@ class NDConnection {
         this.type = 'connection';
         this.color = createVector(255, 255, 255);
         this.id = uuidv4();
+        this.number = null;
+        this.weight = parseInt(random(-2, 2) * 100) / 100;
+        this.expressed = null;
     }
 
     /**
@@ -94,11 +97,28 @@ class NDConnection {
      */
     draw() {
         stroke(this.color.x, this.color.y, this.color.z);
+        if (this.expressed === false) {
+            stroke(150, 150, 150);
+        }
         strokeWeight(3);
         line(this.start.x, this.start.y, this.end.x, this.end.y);
 
         const midPoint = this._getMidPoint();
         stroke(200, 200, 100);
         circle(midPoint.x, midPoint.y, 2);
+
+        strokeWeight(1);
+        stroke(255);
+        if (this.number !== null) {
+            fill(150, 100, 100);
+            textSize(20);
+            text(`${this.number}`, midPoint.x, midPoint.y);
+        }
+
+        if (this.weight !== null) {
+            fill(0, 255, 255);
+            textSize(15);
+            text(`${this.weight}`, midPoint.x, midPoint.y + 15);
+        }
     }
 }
