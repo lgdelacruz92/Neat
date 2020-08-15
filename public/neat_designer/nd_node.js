@@ -3,6 +3,7 @@ class NDNode {
         this.pos = createVector(x, y);
         this.r = 20;
         this.moving = false;
+        this.type = 'node';
     }
 
     /**

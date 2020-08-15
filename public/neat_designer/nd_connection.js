@@ -8,27 +8,13 @@ class NDConnection {
         this.moveBoth = false;
         this._updateSlope();
         this._updateLength();
+        this.type = 'connection';
     }
 
     /**
      * Updates the NDConnection
      */
     update() {
-        const midPoint = this._getMidPoint();
-        if (mousePrsd && dist(this.start.x, this.start.y, mouseX, mouseY) < this.radiusForEdit) {
-            this.moveStart = true;
-        } else if (mousePrsd && dist(this.end.x, this.end.y, mouseX, mouseY) < this.radiusForEdit) {
-            this.moveEnd = true;
-        } else if (mousePrsd && dist(midPoint.x, midPoint.y, mouseX, mouseY) < this.radiusForEdit * 4) {
-            this.moveBoth = true;
-        }
-
-        if (!mousePrsd) {
-            this.moveStart = false;
-            this.moveEnd = false;
-            this.moveBoth = false;
-        }
-
         if (this.moveStart) {
             this.start = createVector(mouseX, mouseY);
             this._updateSlope();
@@ -43,6 +29,44 @@ class NDConnection {
             this.start = p5.Vector.add(dir1, mousePos);
             this.end = p5.Vector.add(dir1.mult(-1), mousePos);
         }
+    }
+
+    /**
+     * True if x,y is near start, else, false.
+     * @param {number} x X coordinate
+     * @param {number} y Y coordinate
+     */
+    nearStart(x, y) {
+        return dist(this.start.x, this.start.y, x, y) < this.radiusForEdit;
+    }
+
+    /**
+     * True if x,y is neart end, else false.
+     * @param {number} x X coordinate
+     * @param {number} y Y coordinate
+     */
+    nearEnd(x, y) {
+        return dist(this.end.x, this.end.y, x, y) < this.radiusForEdit;
+    }
+
+    /**
+     * True if x,y is near it's center. Else, false.
+     * @param {number} x X coordinate
+     * @param {number} y Y coordinate
+     */
+    nearCenter(x, y) {
+        const midPoint = this._getMidPoint();
+        return dist(midPoint.x, midPoint.y, x, y) < this.radiusForEdit;
+    }
+
+    /**
+     * Distance of x,y to center
+     * @param {number} x X coordinate
+     * @param {number} y Y coordinate
+     */
+    distToCenter(x, y) {
+        const midPoint = this._getMidPoint();
+        return dist(midPoint.x, midPoint.y, x, y);
     }
 
     /**
@@ -70,5 +94,9 @@ class NDConnection {
         stroke(255);
         strokeWeight(3);
         line(this.start.x, this.start.y, this.end.x, this.end.y);
+
+        const midPoint = this._getMidPoint();
+        stroke(200, 200, 100);
+        circle(midPoint.x, midPoint.y, 2);
     }
 }
