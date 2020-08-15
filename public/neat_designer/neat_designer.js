@@ -221,6 +221,7 @@ function initializeActions() {
     initializeAddNodeAction();
     initializeAddConnectionAction();
     initializeDeleteItemAction();
+    initializeExportAction();
     removeContextMenu();
 }
 
@@ -301,5 +302,51 @@ function initializeDeleteItemAction() {
         });
     } else {
         throw Error('Delete button doesnt exists.');
+    }
+}
+
+/**
+ * Initializes delete item action
+ */
+function initializeExportAction() {
+    const exportEl = document.querySelector('.nd-export-button');
+    if (exportEl) {
+        exportEl.addEventListener('click', () => {
+            exportNeat();
+        });
+    } else {
+        throw Error('Export button is missing.');
+    }
+}
+
+/**
+ * Exports the canvas
+ */
+function exportNeat() {
+    const neat = null;
+    validateNeat(neat);
+}
+
+/**
+ * Validates if the format of the Neat has the proper characteristics
+ * @param {Neat} neat The Neat object to validate
+ */
+function validateNeat(neat) {
+    if (neat !== null) {
+        if (neat.inputNumber + neat.outputNumber !== neat.nodes.length) {
+            throw Error('Export not working correctly. The node numbers does not match.');
+        }
+        if (neat.inputNumber === undefined) {
+            throw Error('inputNumber missing');
+        }
+        if (neat.outputNumber === undefined) {
+            throw Error('outputNumber missing')
+        }
+        if (Array.isArray(neat.connections) === false) {
+            throw Error('connections property error')
+        }
+        if (Array.isArray(neat.nodes) === false) {
+            throw Error('connections property error')
+        }
     }
 }
