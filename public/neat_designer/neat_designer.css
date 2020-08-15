@@ -33,6 +33,12 @@
     visibility: hidden;
 }
 
+.neat-designer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .popup {
     position: absolute;
     background: white;
