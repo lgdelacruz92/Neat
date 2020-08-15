@@ -1,11 +1,15 @@
 let ndNodes;
 let ndConnections;
+let rightClickOpen;
+let currentlySelectedItems;
+
 function setup() {
     const canvas = createCanvas(400, 400);
     canvas.parent("viewport");
     ndNodes = [];
     ndConnections = [];
     mousePrsd = false; 
+    currentlySelectedItems = [];
 
     initializeActions();
 }
@@ -46,12 +50,70 @@ function drawNodes() {
  */
 function mousePressed(e) {
     if (e.button === 0) {
+        closePopup(e);
         handleLeftClick();
+        deselect(currentlySelectedItems);
     } else if (e.button === 2) {
         const target = createVector(mouseX, mouseY);
+        const canvasTarget = getCanvasTarget(target);
+        if (canvasTarget !== null) {
+            currentlySelectedItems.push({ canvasTarget, origColor: canvasTarget.color });
+            canvasTarget.color = createVector(235, 119, 52);
+        }
         handleRightClick(target);
     }
     return false;
+}
+
+/**
+ * Deselects all items in the currentlySelectedItems
+ * @param {Array} currentlySelectedItems Array of items currently selected
+ */
+function deselect(currentlySelectedItems) {
+    for (let i = 0; i < currentlySelectedItems.length; i++) {
+        const item = currentlySelectedItems[i].canvasTarget;
+        item.color = currentlySelectedItems[i].origColor;
+    }
+}
+
+/**
+ * Gets the most likely target based on coordinates
+ * @param {object} target The x, y location
+ */
+function getCanvasTarget(target) {
+    const possibleTargets = [];
+    for (let i = 0; i < ndNodes.length; i++) {
+        const r = dist(ndNodes[i].pos.x, ndNodes[i].pos.y, target.x, target.y)
+        if (r < ndNodes[i].r) {
+            possibleTargets.push({ item: ndNodes[i], r });
+        }
+    }
+
+    for (let i = 0; i < ndConnections.length; i++) {
+        if (ndConnections[i].nearCenter(target.x, target.y)) {
+            possibleTargets.push({ item: ndConnections[i], r: ndConnections[i].distToCenter(target.x, target.y) });
+        }
+    }
+
+    if (possibleTargets.length > 0) {
+        possibleTargets.sort((a, b) => b.r - a.r);
+        return possibleTargets[0].item;
+    }
+    return null;
+}
+
+/**
+ * Closes the pop up if it is open
+ */
+function closePopup(e) {
+    const popup = document.querySelector('#right-click-canvas-popup');
+    if (popup) {
+        if (e.target !== popup) {
+            popup.setAttribute('class', 'right-click popup disabled');
+        }
+    } else {
+        throw Error('Error: pop up is missing')
+    }
 }
 
 /**
@@ -117,25 +179,36 @@ function mouseReleased(e) {
 }
 
 /**
- * Function called when moused clicked
- */
-function mouseCliced(e) {
-    handleRightClick(e);
-    return false;
-}
-
-/**
  * Handles right click event if there is
  * @param {object} target position
  */
 function handleRightClick(target) {
     const rightClickCanvasPopUp = document.querySelector('#right-click-canvas-popup');
-    if (rightClickCanvasPopUp) {
-        rightClickCanvasPopUp.setAttribute('class', 'right-click popup');
-        rightClickCanvasPopUp.setAttribute('style', `top: ${target.y}px; left: ${target.x}px`);
+    const canvasEl = document.querySelector('canvas');
+    if (rightClickCanvasPopUp && canvasEl) {
+        const rect = canvasEl.getBoundingClientRect();
+
+        if (insideRect(target, rect)) {
+            rightClickCanvasPopUp.setAttribute('class', 'right-click popup');
+            rightClickCanvasPopUp.setAttribute('style', `top: ${rect.top + target.y}px; left: ${rect.left + target.x}px`);
+            return false;
+        }
     } else {
         throw Error('This should not happen. Right click div is missing.');
     }
+}
+
+/**
+ * True if an x,y coordinate is inside a Rectangle else false
+ * @param {object} target Target coordinate
+ * @param {object} rect Rect object to check against
+ * @return {boolean}
+ */
+function insideRect(target, rect) {
+    return rect.left < target.x + rect.left && 
+        target.x + rect.left < rect.left + rect.width && 
+        rect.top < target.y + rect.top && 
+        target.y + rect.top < rect.top + rect.height;
 }
 
 /**
@@ -171,7 +244,7 @@ function initializeAddConnectionAction() {
             ndConnections.push(new NDConnection());
         });
     } else {
-        throw Error('Button with class .nd-add-connection-button is missing.');
+        throw Error('Button or container is missing.');
     }
 }
 
@@ -180,10 +253,17 @@ function initializeAddConnectionAction() {
  */
 function removeContextMenu() {
     const canvas = document.querySelector('canvas');
+    const containerEl = document.querySelector('.container');
     if (canvas) {
+        containerEl.oncontextmenu = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
         canvas.oncontextmenu = function(e) {
             e.preventDefault();
             e.stopPropagation();
         };
+    } else {
+        throw Error('No canvas found.');
     }
 }

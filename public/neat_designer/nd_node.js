@@ -4,6 +4,8 @@ class NDNode {
         this.r = 20;
         this.moving = false;
         this.type = 'node';
+        this.color = createVector(0, 200, 250);
+        this.id = uuidv4();
     }
 
     /**
@@ -21,7 +23,7 @@ class NDNode {
     draw() {
         push();
         stroke(255);
-        fill(0, 200, 250);
+        fill(this.color.x, this.color.y, this.color.z);
         translate(this.pos.x, this.pos.y);
         circle(0, 0, this.r);
         pop();

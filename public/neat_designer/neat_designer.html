@@ -7,6 +7,7 @@
     <link href="mui.min.css" rel="stylesheet" type="text/css" />
     <link href="neat_designer.css" rel="stylesheet" type="text/css" />
     <script src="../../lib/mui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/uuid/8.1.0/uuidv4.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -16,7 +17,9 @@
                 <button class="mui-btn mui-btn--primary mui-btn--raised nd-add-node-button">Add Node</button>
                 <button class="mui-btn mui-btn--primary mui-btn--raised nd-add-connection-button">Add Connection</button>
             </div>
-            <div id="right-click-canvas-popup" class="right-click popup disabled"></div>
+        </div>
+        <div id="right-click-canvas-popup" class="right-click popup disabled">
+            <button class="mui-btn mui-btn--flat delete-button">Delete</button>
         </div>
     </div>
 

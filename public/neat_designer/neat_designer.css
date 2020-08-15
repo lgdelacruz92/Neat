@@ -1,16 +1,39 @@
+* {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+
+
+#viewport {
+    margin-top: 2em;
+}
+
+#popup-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: grey;
+    opacity: 0.3;
+}
+
 .container {
     display: flex;
     justify-content: center;
-    padding: 2em;
+    height: 100%;
+    width: 100%;
 }
 
-.popup {
-    position: absolute;
-    width: 100px;
-    height: 100px;
-    background: red;
+.delete-button {
+    margin: 0;
 }
 
 .disabled {
     visibility: hidden;
+}
+
+.popup {
+    position: absolute;
+    background: white;
 }

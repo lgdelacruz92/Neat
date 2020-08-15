@@ -9,6 +9,8 @@ class NDConnection {
         this._updateSlope();
         this._updateLength();
         this.type = 'connection';
+        this.color = createVector(255, 255, 255);
+        this.id = uuidv4();
     }
 
     /**
@@ -91,7 +93,7 @@ class NDConnection {
      * Draws the connection
      */
     draw() {
-        stroke(255);
+        stroke(this.color.x, this.color.y, this.color.z);
         strokeWeight(3);
         line(this.start.x, this.start.y, this.end.x, this.end.y);
 
