@@ -74,6 +74,7 @@ function deselect(currentlySelectedItems) {
         const item = currentlySelectedItems[i].canvasTarget;
         item.color = currentlySelectedItems[i].origColor;
     }
+    currentlySelectedItems = [];
 }
 
 /**
@@ -217,6 +218,7 @@ function insideRect(target, rect) {
 function initializeActions() {
     initializeAddNodeAction();
     initializeAddConnectionAction();
+    initializeDeleteItemAction();
     removeContextMenu();
 }
 
@@ -265,5 +267,37 @@ function removeContextMenu() {
         };
     } else {
         throw Error('No canvas found.');
+    }
+}
+
+/**
+ * Initializes delete item action
+ */
+function initializeDeleteItemAction() {
+    const deleteBtn = document.querySelector('.delete-button');
+    if (deleteBtn) {
+        deleteBtn.addEventListener('click', () => {
+            if (currentlySelectedItems.length > 1) {
+                throw Error('Something is strange. This shouldnt happen.');
+            } else if (currentlySelectedItems.length === 1) {
+                for (let i = 0; i < ndNodes.length; i++) {
+                    if (ndNodes[i].id === currentlySelectedItems[0].canvasTarget.id) {
+                        ndNodes.splice(i, 1);
+                        break;
+                    }
+                }
+
+                for (let i = 0; i < ndConnections.length; i++) {
+                    if (ndConnections[i].id === currentlySelectedItems[0].canvasTarget.id) {
+                        ndConnections.splice(i, 1);
+                        break;
+                    }
+                }
+
+                currentlySelectedItems = [];
+            }
+        });
+    } else {
+        throw Error('Delete button doesnt exists.');
     }
 }
