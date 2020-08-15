@@ -2,6 +2,8 @@ let ndNodes;
 let ndConnections;
 let rightClickOpen;
 let currentlySelectedItems;
+let inputGroupArea;
+let outputGroupArea;
 
 function setup() {
     const canvas = createCanvas(400, 400);
@@ -10,12 +12,18 @@ function setup() {
     ndConnections = [];
     mousePrsd = false; 
     currentlySelectedItems = [];
+    inputGroupArea = new GroupArea(0, 0);
+    outputGroupArea = new GroupArea(width - 75, 0);
+    inputGroupArea.color = createVector(50, 50, 50);
+    outputGroupArea.color = createVector(100, 100, 100);
 
     initializeActions();
 }
 
 function draw() {
     background(0);
+    inputGroupArea.draw();
+    outputGroupArea.draw();
     drawConnections();
     drawNodes();
 }
@@ -43,6 +51,13 @@ function drawNodes() {
         ndNodes[i].draw();
         ndNodes[i].update();
         ndNodes[i].number = i;
+        if (inputGroupArea.inArea(ndNodes[i].pos.x, ndNodes[i].pos.y)) {
+            ndNodes[i].color = createVector(100, 150, 200);
+        } else if (outputGroupArea.inArea(ndNodes[i].pos.x, ndNodes[i].pos.y)) {
+            ndNodes[i].color = createVector(200, 50, 75);
+        } else {
+            ndNodes[i].color = createVector(0, 200, 250);
+        }
     }
 }
 
@@ -323,8 +338,97 @@ function initializeExportAction() {
  * Exports the canvas
  */
 function exportNeat() {
-    const neat = null;
+    let neat = null;
+    
+    const inputNodes = getAllInputs();
+    if (inputNodes.length === 0) {
+        throw Error('No input nodes. Please put at least one node in input area.');
+    }
+    
+    const outputNodes = getAllOutputs();
+    if (outputNodes.length === 0) {
+        throw Error('No output nodes. Please put at least one node in input area.');
+    }
+
+    validateConnections();
+
+    neat = {
+        inputNumber: inputNodes.length,
+        outputNumber: outputNodes.length,
+    }
+
     validateNeat(neat);
+}
+
+/**
+ * Validates the connections
+ */
+function validateConnections() {
+    if (ndConnections.length === 0) {
+        throw Error('There has to be a min of one connection.');
+    }
+
+    for (let i = 0; i < ndConnections.length; i++) {
+        const nodeInStart = findNodeInStart(ndConnections[i]);
+        const nodeInEnd = findNodeInEnd(ndConnections[i]);
+        if (nodeInStart === null || nodeInEnd === null) {
+            throw Error('This connection is broken. Ensure it has an input and output.');
+        }
+    }
+}
+
+/**
+ * Finds the node that is connected to the start of this connection
+ * @param {Connection} connection The connection
+ */
+function findNodeInStart(connection) {
+
+}
+
+/**
+ * Finds the node that is connected to the end of this connection
+ * @param {Connection} connection The connection
+ */
+function findNodeInEnd(connection) {
+    const result = [];
+    for (let i = 0; i < ndNodes.length; i++) {
+        const r = dist(connection.end.x, connection.end.y, ndNodes[i].pos.x, ndNodes[i].pos.y);
+        if ( r < ndNodes[i].r) {
+            result.push(ndNodes[i]);
+        }
+    }
+    if (result.length > 1) {
+        throw Error('There is more than one node in the end of a connection. Please fix.');
+    } else if (result.length !== 1) {
+        throw Error('The end of a connection is not connected. Please connect it (blue end) to a node.');
+    }
+    return result;
+}
+
+/**
+ * Gets all the nodes in the output area
+ */
+function getAllOutputs() {
+    const result = [];
+    for (let i = 0; i < ndNodes.length; i++) {
+        if (outputGroupArea.inArea(ndNodes[i].pos.x, ndNodes[i].pos.y)) {
+            result.push(ndNodes[i]);
+        }
+    }
+    return result;
+}
+
+/**
+ * Gets all the nodes int he input area
+ */
+function getAllInputs() {
+    const result = [];
+    for (let i = 0; i < ndNodes.length; i++) {
+        if (inputGroupArea.inArea(ndNodes[i].pos.x, ndNodes[i].pos.y)) {
+            result.push(ndNodes[i]);
+        }
+    }
+    return result;
 }
 
 /**
