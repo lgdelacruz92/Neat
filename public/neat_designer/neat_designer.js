@@ -48,7 +48,8 @@ function mousePressed(e) {
     if (e.button === 0) {
         handleLeftClick();
     } else if (e.button === 2) {
-        console.log('right click');
+        const target = createVector(mouseX, mouseY);
+        handleRightClick(target);
     }
     return false;
 }
@@ -125,10 +126,16 @@ function mouseCliced(e) {
 
 /**
  * Handles right click event if there is
+ * @param {object} target position
  */
-function handleRightClick(e) {
-    console.log(e);
-    e.preventDefault();
+function handleRightClick(target) {
+    const rightClickCanvasPopUp = document.querySelector('#right-click-canvas-popup');
+    if (rightClickCanvasPopUp) {
+        rightClickCanvasPopUp.setAttribute('class', 'right-click popup');
+        rightClickCanvasPopUp.setAttribute('style', `top: ${target.y}px; left: ${target.x}px`);
+    } else {
+        throw Error('This should not happen. Right click div is missing.');
+    }
 }
 
 /**
@@ -179,5 +186,4 @@ function removeContextMenu() {
             e.stopPropagation();
         };
     }
-    
 }

@@ -3,3 +3,14 @@
     justify-content: center;
     padding: 2em;
 }
+
+.popup {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    background: red;
+}
+
+.disabled {
+    visibility: hidden;
+}
