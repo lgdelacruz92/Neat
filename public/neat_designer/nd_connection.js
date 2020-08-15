@@ -107,6 +107,12 @@ class NDConnection {
         stroke(200, 200, 100);
         circle(midPoint.x, midPoint.y, 2);
 
+        stroke(200, 0, 0);
+        circle(this.start.x, this.start.y, 3);
+
+        stroke(0, 0, 200);
+        circle(this.end.x, this.end.y, 3);
+
         strokeWeight(1);
         stroke(255);
         if (this.number !== null) {
