@@ -41,6 +41,7 @@ function drawNodes() {
     for (let i = 0; i < ndNodes.length; i++) {
         ndNodes[i].draw();
         ndNodes[i].update();
+        ndNodes[i].number = i;
     }
 }
 
