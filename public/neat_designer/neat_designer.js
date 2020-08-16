@@ -372,7 +372,7 @@ function outputNeatJSON(neatJSON) {
     if (exportedNeatJSONOutput) {
         const neatAsString = prettifyJSON(neatJSON);
         const neatAsArray = neatAsString.split('\n');
-        
+        exportedNeatJSONOutput.innerHTML = '';
         for (let i = 0; i < neatAsArray.length; i++) {
             const pEl = document.createElement('pre');
             const textNode = document.createTextNode(neatAsArray[i]);
@@ -519,7 +519,7 @@ function getAllInputs() {
  */
 function validateNeat(neat) {
     if (neat !== null) {
-        if (neat.inputNumber + neat.outputNumber >= neat.nodes.length) {
+        if (neat.inputNumber + neat.outputNumber > neat.nodes.length) {
             throw Error('Export not working correctly. The node numbers does not match.');
         }
         if (neat.inputNumber === undefined) {

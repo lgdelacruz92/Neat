@@ -242,12 +242,45 @@ class Neat {
         if (this._isHiddenLayerNode(node2) && this.outputNodeIds[node1.id]) {
             newConnection.inNode = node2;
             newConnection.outNode = node1;
-        } else {
+        }
+        else if (this.outputNodeIds[node2.id] && this._isHiddenLayerNode(node1)) {
+            newConnection.inNode = node1;
+            newConnection.outNode = node2;
+        } 
+        else if (this._isHiddenLayerNode(node2) && this._isHiddenLayerNode(node1)) {
+            if (node1.id < node2.id) {
+                newConnection.inNode = node1;
+                newConnection.outNode = node2;
+            } else {
+                newConnection.inNode = node2;
+                newConnection.outNode = node1;
+            }
+        }
+        else if (this.inputNodeIds[node1.id] && this.outputNodeIds[node2.id]) {
             newConnection.inNode = node1;
             newConnection.outNode = node2;
         }
+        else if (this.inputNodeIds[node2.id] && this.outputNodeIds[node1.id]) {
+            newConnection.inNode = node2;
+            newConnection.outNode = node1;
+        }
+        else if (this._isHiddenLayerNode(node2) && this.inputNodeIds[node1.id]) {
+            newConnection.inNode = node1;
+            newConnection.outNode = node2;
+        } else if (this._isHiddenLayerNode(node1) && this.inputNodeIds[node2.id]) {
+            newConnection.inNode = node2;
+            newConnection.outNode = node1;
+        }
+        else {
+            throw Error('This should not happen.');
+        }
+
         this.connections.push(newConnection);
-        this._updateConnectionNumber();
+        if (this.noCycle()) {
+            this._updateConnectionNumber();
+        } else {
+            this.connections.splice(this.connections.length - 1, 1);
+        }
     }
 
     /**
@@ -311,35 +344,35 @@ class Neat {
         const inConnectionsMap = {};
 
         // Activate
-        // while(!this._allStable(nodeStability)) {
-        //     for (let i = 0; i < this.nodes.length; i++) {
-        //         if (this.inputNodeIds[this.nodes[i].id] === undefined && !nodeStability[i]) {
-        //             // Find in connections
-        //             let connections = [];
-        //             if (inConnectionsMap[this.nodes[i].id] !== undefined) {
-        //                 connections = inConnectionsMap[this.nodes[i].id];
-        //             } else {
-        //                 connections = this._findOutConnections(this.nodes[i].id);
-        //             }
+        while(!this._allStable(nodeStability)) {
+            for (let i = 0; i < this.nodes.length; i++) {
+                if (this.inputNodeIds[this.nodes[i].id] === undefined && !nodeStability[i]) {
+                    // Find in connections
+                    let connections = [];
+                    if (inConnectionsMap[this.nodes[i].id] !== undefined) {
+                        connections = inConnectionsMap[this.nodes[i].id];
+                    } else {
+                        connections = this._findOutConnections(this.nodes[i].id);
+                    }
 
-        //             const inNodeSet = connections.map(cnn => {
-        //                 return cnn.inNode;
-        //             });
+                    const inNodeSet = connections.map(cnn => {
+                        return cnn.inNode;
+                    });
 
-        //             if (this._isSetOfNodesStable(inNodeSet, nodeStability)) {
-        //                 connections.forEach(cnn => { 
-        //                     cnn.activate(); 
-        //                 });
-        //                 nodeStability[i] = true;
-        //             } else if (inNodeSet.length === 0) {
-        //                 connections.forEach(cnn => { 
-        //                     cnn.activate(); 
-        //                 });
-        //                 nodeStability[i] = true;
-        //             }
-        //         }
-        //     }
-        // }
+                    if (this._isSetOfNodesStable(inNodeSet, nodeStability)) {
+                        connections.forEach(cnn => { 
+                            cnn.activate(); 
+                        });
+                        nodeStability[i] = true;
+                    } else if (inNodeSet.length === 0) {
+                        connections.forEach(cnn => { 
+                            cnn.activate(); 
+                        });
+                        nodeStability[i] = true;
+                    }
+                }
+            }
+        }
 
         const result = [];
         for (let i = this.inputNumber; i < this.inputNumber + this.outputNumber; i++) {
@@ -492,7 +525,7 @@ class Neat {
                 max = this.nodes[i].id;
             }
         }
-        this.nodeCurrentNumber = max;
+        this.nodeCurrentNumber = max + 1;
     }
 
     /**

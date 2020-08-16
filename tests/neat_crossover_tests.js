@@ -291,7 +291,7 @@ const test_neat_24 = () => {
     assertEqualNoTitle(child.connections[6].outNode.id, 5);
     assertEqualNoTitle(child.connections[6].expressed, true);
 
-    // Connection 7
+    // Connection 8
     assertEqualNoTitle(child.connections[7].inNode.id, 5);
     assertEqualNoTitle(child.connections[7].outNode.id, 4);
     assertEqualNoTitle(child.connections[7].expressed, true);
@@ -301,20 +301,14 @@ const test_neat_25 = () => {
     const neat1 = new Neat(3, 2);
     neat2 = neat1.copy();
 
+    const childNeat = neat1.crossOver(neat2);
     for (let i = 0; i < 10; i++) {
         if (Math.random() > 0.5) {
-            neat1.mutate(true);
+            childNeat.mutate(true);
         } else {
-            neat1.mutate(false, true);
-        }
-        if (Math.random() > 0.5) {
-            neat2.mutate(true);
-        } else {
-            neat2.mutate(false, true);
+            childNeat.mutate(false, true);
         }
     }
-
-    const childNeat = neat1.crossOver(neat2);
     const result = childNeat.activate([0.3, 0.3, 0.2]);
     assertEqual(result.length, 2, 'The crossOver and mutations dont crash.');
 }
