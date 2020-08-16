@@ -79,7 +79,6 @@ function mousePressed(e) {
         }
         handleRightClick(target);
     }
-    return false;
 }
 
 /**

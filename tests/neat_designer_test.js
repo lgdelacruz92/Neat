@@ -41,7 +41,7 @@ const test_neat_designer_1 = () => {
     const neat = NEAT.fromJSON(neat_jason_sample_1);
     assertEqual(neat.connections.length, 2, 'Neat fromJSON function.');
     assertEqualNoTitle(neat.nodes.length, 3);
-    assertEqualNoTitle(neat.nodeCurrentNumber, 2);
+    assertEqualNoTitle(neat.nodeCurrentNumber, 3);
     assertEqualNoTitle(neat.connectionCurrentNumber, 1);
     assertEqualNoTitle(neat.inputNodeIds[0], true);
     assertEqualNoTitle(neat.inputNodeIds[1], true);
