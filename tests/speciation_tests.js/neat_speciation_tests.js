@@ -31,8 +31,8 @@ const test_speciation_1 = () => {
     }
     const neat1 = NEAT.fromJSON(neat1JSON);
     const neat2 = NEAT.fromJSON(neat1JSON);
-
-    assertEqual(neat1.dist(neat2), 1, 'Neat should have a distance function with another neat.');
+    const result = neat1.dist(neat2);
+    assertEqual(result, 0, 'Neat should have a distance function with another neat.');
 }
 
 test_speciation_1();

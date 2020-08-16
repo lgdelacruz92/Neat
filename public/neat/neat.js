@@ -39,19 +39,40 @@ class Neat {
         let connectionsMap = {};
         if (this.connections.length > otherNeat.connections.length) {
             connectionsMap = this._buildConnectionMatches(this.connections, otherNeat.connections);
+            const excess = this._countExcess(connectionsMap);
+            const disjoint = this._countDisjoints(connectionsMap, this.connections, otherNeat.connections);
+            const avgWeightDiff = this._getAvgWeightDifferences(connectionsMap);
+            return (excess / this.connections.length) + (disjoint / this.connections.length) + avgWeightDiff;
         } else {
             connectionsMap = this._buildConnectionMatches(otherNeat.connections, this.connections);
+            const excess = this._countExcess(connectionsMap);
+            const disjoint = this._countDisjoints(connectionsMap, otherNeat.connections, this.connections);
+            const avgWeightDiff = this._getAvgWeightDifferences(connectionsMap);
+            return (excess / otherNeat.connections.length) + (disjoint / otherNeat.connections.length) + avgWeightDiff;
         }
-        
-        const excess = this._countExcess(connectionsMap);
-        let disjoint = 0;
-        if (this.connections.length > otherNeat.connections.length) {
-            this._countDisjoints(connectionsMap, this.connections, otherNeat.connections);
+    }
+
+    /**
+     * Gets the average weight differences between matching genes
+     * @param {Object} connectionsMap The connection map
+     */
+    _getAvgWeightDifferences(connectionsMap) {
+
+        let avgWeightDiff = 0;
+        const keys = Object.keys(connectionsMap);
+        let countOfMatching = 0;
+        for (let i = 0; i < keys.length; i++) {
+            if (connectionsMap[keys[i]].length === 2) {
+                avgWeightDiff += (connectionsMap[keys[i]][0].weight - connectionsMap[keys[i]][1].weight) / 2;
+                countOfMatching +=1;
+            }
+        }
+        if (countOfMatching === 0) {
+            return 0;
         } else {
-            this._countDisjoints(connectionsMap, otherNeat.connections, this.connections);
+            return avgWeightDiff / countOfMatching;
         }
 
-        return 1;
     }
 
     /**
